@@ -1,0 +1,31 @@
+.burgerIngredients {
+  max-width: 600px;
+  box-sizing: border-box;
+}
+
+.ingridientsList {
+  list-style-type: none;
+
+  margin: 0;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 24px;
+  row-gap: 32px;
+
+  box-sizing: border-box;
+}
+
+.ingridientsContainer {
+  overflow-y: auto;
+  max-height: calc(100vh - 284px);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: #2F2F37;;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}

@@ -1,0 +1,56 @@
+.burgerConstructor {
+  padding-bottom: 52px;
+  box-sizing: border-box;
+  max-width: 600px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.orderList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  max-height: calc(100vh - 400px);
+}
+
+.orderList__element {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.totalContainer {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+
+  box-sizing: border-box;
+  padding-right: 16px;
+}
+
+.totalPrice {
+  margin-right: 9.5px;
+}
+
+.totalPriceContainer {
+  display: flex;
+  align-items: center;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: #2F2F37;;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}

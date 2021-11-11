@@ -1,0 +1,9 @@
+.nameIngr {
+  text-align: center;
+  min-height: 48px;
+}
+
+.priceContainer {
+  display: flex;
+  justify-content: center;
+}
