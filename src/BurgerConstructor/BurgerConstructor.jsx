@@ -3,17 +3,16 @@ import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktiku
 import { productsData } from "../utils/constants";
 import BurgConstructorStyles from "./BurgerConstructor.module.css";
 
-const createConstructorElement = ((product) =>
-  <li className={`${BurgConstructorStyles.orderList__element} mr-2`}>
+const createConstructorElement = (({ image, name, price, _id }) =>
+  <li key={_id} className={`${BurgConstructorStyles.orderList__element} mr-2`}>
     <DragIcon />
     <ConstructorElement
       isLocked={true}
-      text={product.name}
-      price={product.price}
-      thumbnail={product.image}
+      text={name}
+      price={price}
+      thumbnail={image}
     />
   </li>
-
 )
 
 class BurgerConstructor extends React.Component {

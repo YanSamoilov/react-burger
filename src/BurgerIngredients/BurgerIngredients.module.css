@@ -16,6 +16,10 @@
   box-sizing: border-box;
 }
 
+.burgerIngredients__listElement {
+  position: relative;
+}
+
 .ingridientsContainer {
   overflow-y: auto;
   max-height: calc(100vh - 284px);

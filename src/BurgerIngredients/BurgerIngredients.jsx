@@ -20,11 +20,11 @@ const FullTab = () => {
   )
 }
 
-const renderIngridient = ((product) =>
-    <li key={product._id} className={`${BurgerIngrStyles.listElement}`}>
-      <Ingridient image={product.image} name={product.name} price={product.price} />
-    </li>
-  )
+const renderIngridient = (({ image, name, price, _id }) =>
+  <li key={_id} className={`${BurgerIngrStyles.burgerIngredients__listElement}`}>
+    <Ingridient image={image} name={name} price={price} />
+  </li>
+)
 
 class BurgerIngredients extends React.Component {
   render() {
