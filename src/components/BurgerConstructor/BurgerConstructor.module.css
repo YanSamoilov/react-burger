@@ -1,25 +1,23 @@
 .burgerConstructor {
-  padding-bottom: 52px;
   box-sizing: border-box;
   max-width: 600px;
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .orderList {
   list-style-type: none;
-  margin: 0;
+  margin: 10 0;
   padding: 0;
 
   overflow-y: auto;
 
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
 
-  max-height: calc(100vh - 400px);
+  max-height: calc(100vh - 496px);
 }
 
 .orderList__element {
@@ -35,6 +33,8 @@
 
   box-sizing: border-box;
   padding-right: 16px;
+
+  align-self: flex-end;
 }
 
 .totalPrice {

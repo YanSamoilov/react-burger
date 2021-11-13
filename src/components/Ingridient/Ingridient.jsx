@@ -1,24 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import { productsData } from "../utils/constants";
 import IngStyles from './Ingridient.module.css';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
-
-export { bunIngridient, sauceIngridient, mainIngridient, Ingridient }
-
-
-let bunIngridient = [];
-let sauceIngridient = [];
-let mainIngridient = [];
-
-productsData.map(product => {
-  if (product.type === 'bun')
-    bunIngridient.push(product)
-  else if (product.type === 'sauce')
-    sauceIngridient.push(product)
-  else if (product.type === 'main')
-    mainIngridient.push(product)
-})
 
 function Ingridient({ image, name, price }) {
   const [count, setcount] = React.useState(1)
@@ -40,3 +23,5 @@ Ingridient.propTypes = {
   name: PropTypes.string,
   price: PropTypes.number
 }
+
+export default Ingridient
