@@ -1,9 +1,9 @@
-.burgerIngredients {
+.burger-ingredients {
   max-width: 600px;
   box-sizing: border-box;
 }
 
-.ingridientsList {
+.burger-ingredients__ingridients-list {
   list-style-type: none;
 
   margin: 0;
@@ -16,11 +16,13 @@
   box-sizing: border-box;
 }
 
-.burgerIngredients__listElement {
+.burger-ingredients__list-elem {
   position: relative;
+
+  cursor: pointer;
 }
 
-.ingridientsContainer {
+.burger-ingredients__container {
   overflow-y: auto;
   max-height: calc(100vh - 284px);
 }

@@ -1,9 +1,9 @@
-.nameIngr {
+.ingridient {
   text-align: center;
   min-height: 48px;
 }
 
-.priceContainer {
+.ingridient__price-container {
   display: flex;
   justify-content: center;
 }

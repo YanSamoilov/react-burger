@@ -1,4 +1,4 @@
-.burgerConstructor {
+.burger-constructor {
   box-sizing: border-box;
   max-width: 600px;
 
@@ -6,7 +6,7 @@
   flex-direction: column;
 }
 
-.orderList {
+.burger-constructor__orderList {
   list-style-type: none;
   margin: 10 0;
   padding: 0;
@@ -20,13 +20,13 @@
   max-height: calc(100vh - 496px);
 }
 
-.orderList__element {
+.burger-constructor__orderList-element {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.totalContainer {
+.burger-constructor__total-container {
   display: flex;
   align-items: center;
   justify-content: end;
@@ -37,11 +37,11 @@
   align-self: flex-end;
 }
 
-.totalPrice {
+.burger-constructor__total-price {
   margin-right: 9.5px;
 }
 
-.totalPriceContainer {
+.burger-constructor__total-price-container {
   display: flex;
   align-items: center;
 }
