@@ -1,27 +1,21 @@
-import React from "react";
-import AppHeader from "../Header/Header";
-import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
-import Modal from "../Modal/Modal";
-import { serverUrl } from "../../utils/constants";
+import { useState, useEffect, useMemo } from "react";
+import AppHeader from 'components/Header/Header';
+import BurgerIngredients from "components/BurgerIngredients/BurgerIngredients";
+import BurgerConstructor from "components/BurgerConstructor/BurgerConstructor";
+import { INGREDIENTS_URL } from "utils/constants";
 import AppStyles from "./App.module.css";
-import ModalOverlay from "../ModalOverlay/ModalOverlay";
 
-const App = () => {
+function App() {
 
-  const bunIngridients = [];
-  const sauceIngridients = [];
-  const mainIngridients = [];
+  const [ingridientData, setIngridientData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const [ingridientData, setIngridientData] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [hasError, setHasError] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState(null);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const getIngridientsData = async () => {
       try {
-        const res = await fetch(serverUrl);
+        const res = await fetch(INGREDIENTS_URL);
         const data = await res.json();
         setIngridientData(data.data);
       } catch (error) {
@@ -34,14 +28,9 @@ const App = () => {
   }, [])
 
   //Разделить все ингридиенты по типам в массивы
-  ingridientData.map(product => {
-    if (product.type === 'bun')
-      bunIngridients.push(product)
-    else if (product.type === 'sauce')
-      sauceIngridients.push(product)
-    else if (product.type === 'main')
-      mainIngridients.push(product)
-  })
+  const bunIngridients = useMemo(() => ingridientData.filter(product => product.type === 'bun'), [ingridientData]);
+  const sauceIngridients = useMemo(() => ingridientData.filter(product => product.type === 'sauce'), [ingridientData]);
+  const mainIngridients = useMemo(() => ingridientData.filter(product => product.type === 'main'), [ingridientData]);
 
   // На данный момент захардкоженный объект заказа для рендера секции заказа.
   const burgerOrder = {
@@ -50,26 +39,26 @@ const App = () => {
     mainIngridient: [mainIngridients[0], mainIngridients[4], mainIngridients[5]]
   }
 
+  if (hasError) {
+    return (<p className={`${AppStyles.main__error} text text_type_main-default`}>Произошла ошибка: {errorMessage}</p>)
+  }
+  else if (isLoading) {
+    return (<p className={`${AppStyles.main__error} text text_type_main-default`}>Загрузка...</p>)
+  }
   return (
     <>
       <AppHeader />
       <main className={`${AppStyles.main} pr-5 pl-5`}>
-        {hasError && <p className={`${AppStyles.main__error} text text_type_main-default`}>
-          Произошла ошибка: {errorMessage}
-        </p>}
-        {!isLoading &&
-          !hasError &&
-          <>
-            <BurgerIngredients
-              bunIngridient={bunIngridients}
-              sauceIngridient={sauceIngridients}
-              mainIngridient={mainIngridients} />
-            <BurgerConstructor
-              bun={burgerOrder.bun}
-              sauce={burgerOrder.sauce}
-              mainIngridient={burgerOrder.mainIngridient} />
-          </>
-        }
+        <>
+          <BurgerIngredients
+            bunIngridient={bunIngridients}
+            sauceIngridient={sauceIngridients}
+            mainIngridient={mainIngridients} />
+          <BurgerConstructor
+            bun={burgerOrder.bun}
+            sauce={burgerOrder.sauce}
+            mainIngridient={burgerOrder.mainIngridient} />
+        </>
       </main>
     </>
   )

@@ -1,20 +1,22 @@
-import React from "react";
+import { useState, useRef, useCallback } from "react";
 import PropTypes from 'prop-types';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import Ingridient from "../Ingridient/Ingridient";
-import IngredientDetails from "../IngredientDetails/IngredientDetails";
+import Ingridient from "components/Ingridient/Ingridient";
+import IngredientDetails from "components/IngredientDetails/IngredientDetails";
+import Modal from "components/Modal/Modal";
+import {IngridientPropTypes} from "utils/constants";
 import BurgerIngrStyles from './BurgerIngredients.module.css';
-import Modal from "../Modal/Modal";
+
 
 function BurgerIngredients({ bunIngridient, sauceIngridient, mainIngridient }) {
-  const [isModalActive, setIsModalActive] = React.useState(false);
-  const [selectIngridient, setSelectIngridient] = React.useState(null);
-  const bunHeadingRef = React.useRef(null);
-  const sauceHeadingRef = React.useRef(null);
-  const mainIngridientHeadingRef = React.useRef(null);
+  const [isModalActive, setIsModalActive] = useState(false);
+  const [selectIngridient, setSelectIngridient] = useState(null);
+  const bunHeadingRef = useRef(null);
+  const sauceHeadingRef = useRef(null);
+  const mainIngridientHeadingRef = useRef(null);
 
   const FullTab = () => {
-    const [current, setCurrent] = React.useState('one')
+    const [current, setCurrent] = useState('one')
     return (
       <div style={{ display: 'flex' }}>
         <Tab value="one" active={current === 'one'} onClick={(value) => {
@@ -26,7 +28,7 @@ function BurgerIngredients({ bunIngridient, sauceIngridient, mainIngridient }) {
         <Tab value="two" active={current === 'two'} onClick={(value) => {
           setCurrent(value);
           sauceHeadingRef.current.scrollIntoView();
-          }}>
+        }}>
           Соусы
         </Tab>
         <Tab value="three" active={current === 'three'} onClick={(value) => {
@@ -39,32 +41,31 @@ function BurgerIngredients({ bunIngridient, sauceIngridient, mainIngridient }) {
     )
   }
 
-//Создать единый массив всех ингридиентов
+  //Создать единый массив всех ингридиентов: булки, соусы и начинки
   const arrayAllIngridients = bunIngridient.concat(sauceIngridient.concat(mainIngridient))
 
-//Найти объект ингридиента по выбранному id
-  const findSelectIngridient = (selectIngridientId) => {
+  //Найти объект ингридиента по выбранному id
+  const findSelectedIngridient = (selectIngridientId) => {
     return arrayAllIngridients.find(ingr => ingr._id === selectIngridientId);
   }
 
-//Открыть модальное окно с данными ингридиента
-  const handleOpenIngridient = (e) => {
-    setSelectIngridient(findSelectIngridient(e.currentTarget.id))
+  //Открыть модальное окно с данными ингридиента
+  const handleOpenIngridient = (id) => {
+    setSelectIngridient(findSelectedIngridient(id))
     setIsModalActive(true);
   }
 
-//Закрыть модальное окно
+  //Закрыть модальное окно
   const handleCloseIngridient = () => {
     setIsModalActive(false)
   }
 
-//Рендер списка ингридиента
-  const renderIngridient = (({ image, name, price, _id }) => (
-    <li id={_id} onClickCapture={handleOpenIngridient} key={_id} className={`${BurgerIngrStyles['burger-ingredients__list-elem']}`}>
+  //Рендер списка ингридиента
+  const renderIngridient = useCallback(({ image, name, price, _id }) => (
+    <li id={_id} onClickCapture={() => handleOpenIngridient(_id)} key={_id} className={`${BurgerIngrStyles['burger-ingredients__list-elem']}`}>
       <Ingridient image={image} name={name} price={price} />
     </li>
-  )
-  )
+  ), [{ bunIngridient, sauceIngridient, mainIngridient }])
 
   return (
     <section className={`${BurgerIngrStyles['burger-ingredients']} pt-10 mr-10`}>
@@ -93,9 +94,9 @@ function BurgerIngredients({ bunIngridient, sauceIngridient, mainIngridient }) {
 }
 
 BurgerIngredients.propTypes = {
-  bunIngridient: PropTypes.array,
-  sauceIngridient: PropTypes.array,
-  mainIngridient: PropTypes.array
+  bunIngridient: PropTypes.arrayOf(IngridientPropTypes),
+  sauceIngridient: PropTypes.arrayOf(IngridientPropTypes),
+  mainIngridient: PropTypes.arrayOf(IngridientPropTypes)
 }
 
 export default BurgerIngredients

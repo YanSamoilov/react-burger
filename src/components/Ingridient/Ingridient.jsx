@@ -1,11 +1,11 @@
-import React from "react";
+import { useState } from "react";
 import PropTypes from 'prop-types';
-import IngStyles from './Ingridient.module.css';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+import IngStyles from './Ingridient.module.css';
 
 function Ingridient({ image, name, price }) {
+  const [count, setcount] = useState(1)
 
-  const [count, setcount] = React.useState(1)
   return (
     <>
       {count > 0 && <Counter count={count} size={'default'} />}

@@ -1,4 +1,4 @@
-import done from '../../images/done.svg';
+import done from 'images/done.svg';
 import OrderDetailsStyles from './OrderDetails.module.css';
 
 function OrderDetails() {

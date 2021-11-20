@@ -1,29 +1,28 @@
-import React from "react";
+import { useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from 'prop-types';
-import { modalContainer } from "../../utils/constants";
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import ModalOverlay from "../ModalOverlay/ModalOverlay";
+import ModalOverlay from "components/ModalOverlay/ModalOverlay";
+import { modalContainer } from "utils/constants";
 import ModalStyle from "./Modal.module.css"
 
-function Modal (props) {
-  console.log(props);
-  const overlayRef = React.useRef(null)
+function Modal(props) {
+  const overlayRef = useRef(null)
 
-// Закрыть модальное окно по нажатию Escape.
+  // Закрыть модальное окно по нажатию Escape.
   const handleCloseEsc = (evt) => {
     if (evt.key === 'Escape')
       props.handleCloseModal();
   }
 
-// Закрыть модальное окно по нажатию overlay.
+  // Закрыть модальное окно по нажатию overlay.
   const handleCloseOverlay = (evt) => {
     if (evt.target === overlayRef.current)
       props.handleCloseModal();
   }
 
-//Установить и удалить слушатель на нажатие Esc
-  React.useEffect(() => {
+  //Установить и удалить слушатель на нажатие Esc
+  useEffect(() => {
     document.addEventListener('keydown', handleCloseEsc);
 
     return () => {
@@ -31,8 +30,8 @@ function Modal (props) {
     }
   }, [])
 
-//Установить слушатель на клик вне области модального окна
-  React.useEffect(() => {
+  //Установить слушатель на клик вне области модального окна
+  useEffect(() => {
     document.addEventListener('click', handleCloseOverlay)
 
     return () => {
@@ -40,9 +39,9 @@ function Modal (props) {
     }
   })
 
-  return ReactDOM.createPortal (
+  return ReactDOM.createPortal(
     <div className={`${ModalStyle.modal} ${ModalStyle.modal_open} `}>
-      <ModalOverlay overlayRef={overlayRef}/>
+      <ModalOverlay overlayRef={overlayRef} />
       <div className={ModalStyle.modal__content}>
         <button className={`${ModalStyle['modal__button-close']}`} onClick={props.handleCloseModal}>
           <CloseIcon type="primary" />

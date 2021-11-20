@@ -1,8 +1,9 @@
-import React from "react";
-import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useState } from "react";
 import PropTypes from 'prop-types';
-import Modal from '../Modal/Modal';
-import OrderDetails from "../OrderDetails/OrderDetails";
+import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import Modal from 'components/Modal/Modal';
+import OrderDetails from "components/OrderDetails/OrderDetails";
+import { IngridientPropTypes } from "utils/constants";
 import BurgConstructorStyles from "./BurgerConstructor.module.css";
 
 // Создать элемент ингридиента внутри бургера.
@@ -34,7 +35,7 @@ const createBunIngridient = (({ image, name, price }, type, _id) => (
 )
 
 function BurgerConstructor(burgerOrder) {
-  const [isActiveModal, setIsActiveModal] = React.useState(false)
+  const [isActiveModal, setIsActiveModal] = useState(false)
 
   const handleOpenModal = () => {
     setIsActiveModal(true);
@@ -69,10 +70,10 @@ function BurgerConstructor(burgerOrder) {
   )
 }
 
-BurgerConstructor: PropTypes.shape({
-  bun: PropTypes.object,
-  mainIngridient: PropTypes.array,
-  sauce: PropTypes.object
-})
+BurgerConstructor.propTypes = {
+  bun: IngridientPropTypes,
+  mainIngridient: PropTypes.arrayOf(IngridientPropTypes),
+  sauce: IngridientPropTypes
+}
 
 export default BurgerConstructor
