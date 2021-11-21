@@ -1,0 +1,9 @@
+.ingridient {
+  text-align: center;
+  min-height: 48px;
+}
+
+.ingridient__price-container {
+  display: flex;
+  justify-content: center;
+}

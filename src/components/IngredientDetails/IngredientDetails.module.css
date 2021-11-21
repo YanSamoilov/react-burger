@@ -1,0 +1,29 @@
+.ingredientDetails {
+  box-sizing: border-box;
+
+  padding-top: 52px;
+}
+
+.ingredientDetails__name {
+  text-align: center;
+}
+
+.ingredientDetails__image {
+  display: block;
+  margin: 0 auto;
+}
+
+.ingredientDetails__list {
+  list-style-type: none;
+
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+}
+
+.ingredientDetails__list-elem {
+  width: 120px;
+  text-align: center;
+  color: #8585AD;
+}

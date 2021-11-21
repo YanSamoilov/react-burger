@@ -1,0 +1,56 @@
+.burger-constructor {
+  box-sizing: border-box;
+  max-width: 600px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.burger-constructor__orderList {
+  list-style-type: none;
+  margin: 10 0;
+  padding: 0;
+
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  max-height: calc(100vh - 496px);
+}
+
+.burger-constructor__orderList-element {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.burger-constructor__total-container {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+
+  box-sizing: border-box;
+  padding-right: 16px;
+
+  align-self: flex-end;
+}
+
+.burger-constructor__total-price {
+  margin-right: 9.5px;
+}
+
+.burger-constructor__total-price-container {
+  display: flex;
+  align-items: center;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: #2F2F37;;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}
