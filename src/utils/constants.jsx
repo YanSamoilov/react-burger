@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 
 export const INGREDIENTS_URL = 'https://norma.nomoreparties.space/api/ingredients';
+export const ORDER_URL = 'https://norma.nomoreparties.space/api/orders';
+
 export const modalContainer = document.querySelector('#modal_container');
+
 export const IngridientPropTypes = PropTypes.shape({
   _id: PropTypes.string,
   name: PropTypes.string,

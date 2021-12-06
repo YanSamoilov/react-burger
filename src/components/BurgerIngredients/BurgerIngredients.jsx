@@ -1,19 +1,19 @@
-import { useState, useRef, useCallback } from "react";
-import PropTypes from 'prop-types';
+import { useState, useRef, useCallback, useContext, useMemo } from "react";
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import Ingridient from "components/Ingridient/Ingridient";
 import IngredientDetails from "components/IngredientDetails/IngredientDetails";
 import Modal from "components/Modal/Modal";
-import {IngridientPropTypes} from "utils/constants";
 import BurgerIngrStyles from './BurgerIngredients.module.css';
+import { AllIngridientsContext } from "utils/appContext";
 
 
-function BurgerIngredients({ bunIngridient, sauceIngridient, mainIngridient }) {
+function BurgerIngredients() {
   const [isModalActive, setIsModalActive] = useState(false);
   const [selectIngridient, setSelectIngridient] = useState(null);
   const bunHeadingRef = useRef(null);
   const sauceHeadingRef = useRef(null);
   const mainIngridientHeadingRef = useRef(null);
+  const dataIngridients = useContext(AllIngridientsContext);
 
   const FullTab = () => {
     const [current, setCurrent] = useState('one')
@@ -41,12 +41,14 @@ function BurgerIngredients({ bunIngridient, sauceIngridient, mainIngridient }) {
     )
   }
 
-  //Создать единый массив всех ингридиентов: булки, соусы и начинки
-  const arrayAllIngridients = bunIngridient.concat(sauceIngridient.concat(mainIngridient))
+  //Разделить все ингридиенты по типам в массивы
+  const bunIngridient = useMemo(() => dataIngridients.filter(product => product.type === 'bun'), [dataIngridients]);
+  const sauceIngridient = useMemo(() => dataIngridients.filter(product => product.type === 'sauce'), [dataIngridients]);
+  const mainIngridient = useMemo(() => dataIngridients.filter(product => product.type === 'main'), [dataIngridients]);
 
   //Найти объект ингридиента по выбранному id
   const findSelectedIngridient = (selectIngridientId) => {
-    return arrayAllIngridients.find(ingr => ingr._id === selectIngridientId);
+    return dataIngridients.find(ingr => ingr._id === selectIngridientId);
   }
 
   //Открыть модальное окно с данными ингридиента
@@ -91,12 +93,6 @@ function BurgerIngredients({ bunIngridient, sauceIngridient, mainIngridient }) {
         </Modal>}
     </section>
   )
-}
-
-BurgerIngredients.propTypes = {
-  bunIngridient: PropTypes.arrayOf(IngridientPropTypes),
-  sauceIngridient: PropTypes.arrayOf(IngridientPropTypes),
-  mainIngridient: PropTypes.arrayOf(IngridientPropTypes)
 }
 
 export default BurgerIngredients

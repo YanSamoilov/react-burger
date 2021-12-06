@@ -1,11 +1,27 @@
 import done from 'images/done.svg';
+import { useEffect, useState } from 'react';
+import { postOrder } from 'utils/api';
+import PropTypes from 'prop-types';
 import OrderDetailsStyles from './OrderDetails.module.css';
 
-function OrderDetails() {
+function OrderDetails(props) {
+
+  const [orderNum, setOrderNum] = useState(0);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    postOrder(props.arrayOrderId)
+      .then((res) => {
+        setOrderNum(res.order.number)
+      })
+      .catch((err) => {
+        setError(`Ошибка ${err}`)
+      })
+  }, [props.arrayOrderId])
 
   return (
     <div className={`${OrderDetailsStyles.orderDetails} pt-30 pb-30`}>
-      <h1 className={`${OrderDetailsStyles.orderDetails__heading} text text_type_digits-large mb-8`}>034536</h1>
+      <h1 className={`${OrderDetailsStyles.orderDetails__heading} text text_type_digits-large mb-8`}>{orderNum || error}</h1>
       <p className={`${OrderDetailsStyles.orderDetails__text} text text_type_main-medium mb-15`}>
         идентификатор заказа
       </p>
@@ -18,7 +34,10 @@ function OrderDetails() {
       </p>
     </div>
   )
+}
 
+OrderDetails.propTypes = {
+  arrayOrderId: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default OrderDetails
