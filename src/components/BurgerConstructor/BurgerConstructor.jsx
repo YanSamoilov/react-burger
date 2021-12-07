@@ -1,13 +1,14 @@
 import { useState, useContext, useMemo, useEffect } from "react";
 import { ConstructorElement, CurrencyIcon, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { postOrder } from 'utils/api';
 import Modal from 'components/Modal/Modal';
 import OrderDetails from "components/OrderDetails/OrderDetails";
-import { AllIngridientsContext } from "utils/appContext";
+import { AllIngredientsContext } from "utils/appContext";
 import BurgConstructorStyles from "./BurgerConstructor.module.css";
 
-// Создать элемент ингридиента внутри бургера.
-const createInnerIngridient = (({ image, name, price, _id }) => (
-  <li key={_id} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2`}>
+// Создать элемент ингредиента внутри бургера.
+const createInnerIngredient = (({ image, name, price, _id }, ind) => (
+  <li key={`${_id}${ind}`} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2`}>
     <DragIcon />
     <ConstructorElement
       isLocked={false}
@@ -20,12 +21,12 @@ const createInnerIngridient = (({ image, name, price, _id }) => (
 )
 
 // Создать элемент булки.
-const createBunIngridient = (({ image, name, price }, type, _id) => (
+const createBunIngredient = (({ image, name, price }, type, _id, side) => (
   <li key={_id} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2 ml-8`}>
     <ConstructorElement
       type={type}
       isLocked={true}
-      text={name}
+      text={`${name} (${side})`}
       price={price}
       thumbnail={image}
     />
@@ -35,20 +36,35 @@ const createBunIngridient = (({ image, name, price }, type, _id) => (
 
 function BurgerConstructor() {
   const [isActiveModal, setIsActiveModal] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(0);
   const [totalIds, setTotalIds] = useState([]);
-  const dataIngridients = useContext(AllIngridientsContext);
+  const [orderNum, setOrderNum] = useState(0);
+  const [errorOrderNum, setErrorOrderNum] = useState('');
+  const dataIngredients = useContext(AllIngredientsContext);
 
-  //Установить рандомно выбранные ингридиенты для бургера(временно).
-  const bun = useMemo(() => dataIngridients.filter(product => product.type === 'bun'), [dataIngridients]);
-  const sauce = useMemo(() => dataIngridients.filter(product => product.type === 'sauce'), [dataIngridients]);
-  const mainIngridient = useMemo(() => dataIngridients.filter(product => product.type === 'main'), [dataIngridients]);
+  //Установить выбранные ингредиенты для бургера(временно).
+  const bun = useMemo(() => dataIngredients.find(product => product.type === 'bun'), [dataIngredients]);
+  const sauce = useMemo(() => dataIngredients.find(product => product.type === 'sauce'), [dataIngredients]);
+  const mainIngridient = useMemo(() => dataIngredients.filter(product => product.type === 'main'), [dataIngredients]);
 
-  //Рассчет итоговой стоимости и сбор всех id ингириентов для конструктора
-  useEffect(() => {
-    setTotalPrice(bun[1].price * 2 + sauce[0].price + mainIngridient.reduce((acc, elem) => acc + elem.price, 0))
-    setTotalIds([].concat(bun[1]._id).concat(sauce[0]._id).concat(mainIngridient.map(elem => elem._id)))
-  }, [dataIngridients])
+  //Расчет итоговой стоимости.
+  const totalPrice = useMemo(() => bun.price * 2 + sauce.price + mainIngridient.reduce((acc, elem) => acc + elem.price, 0), [bun, sauce, mainIngridient]);
+
+  //Сбор всех id ингредиентов для конструктора.
+  useEffect(() => setTotalIds([].concat(bun._id).concat(sauce._id).concat(mainIngridient.map(elem => elem._id))), [bun, sauce, mainIngridient]);
+
+  //Получить номер заказа от сервера.
+  const getOrder = () => {
+    postOrder(totalIds)
+      .then((res) => {
+        setOrderNum(res.order.number)
+      })
+      .catch((err) => {
+        setErrorOrderNum(`Ошибка ${err}`)
+      })
+      .finally(() => {
+        handleOpenModal()
+      })
+  }
 
   const handleOpenModal = () => {
     setIsActiveModal(true);
@@ -60,24 +76,26 @@ function BurgerConstructor() {
 
   return (
     <section className={`${BurgConstructorStyles['burger-constructor']} pt-25 pl-4`}>
-      {createBunIngridient(bun[1], 'top', `${bun[1]._id}`)}
-      <ul className={`${BurgConstructorStyles['burger-constructor__orderList']}`}>
-        {createInnerIngridient(sauce[0])}
-        {mainIngridient.map(createInnerIngridient)}
+      <ul className={`${BurgConstructorStyles['burger-constructor__bunList']}`}>
+        {createBunIngredient(bun, 'top', `${bun._id}`, 'верх')}
+        <ul className={`${BurgConstructorStyles['burger-constructor__orderList']}`}>
+          {createInnerIngredient(sauce)}
+          {mainIngridient.map(createInnerIngredient)}
+        </ul>
+        {createBunIngredient(bun, 'bottom', `${bun._id}bottom`, 'низ')}
       </ul>
-      {createBunIngridient(bun[1], 'bottom', `${bun[1]._id}bottom`)}
       <div className={`${BurgConstructorStyles['burger-constructor__total-container']} mt-10`}>
         <div className={`${BurgConstructorStyles['burger-constructor__total-price-container']} mr-10`}>
           <p className={`${BurgConstructorStyles['burger-constructor__total-price']} text text_type_digits-medium`}>{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="large" onClick={handleOpenModal}>
+        <Button type="primary" size="large" onClick={getOrder}>
           Оформить заказ
         </Button>
       </div>
       {isActiveModal &&
         <Modal handleCloseModal={handleCloseModal}>
-          <OrderDetails arrayOrderId={totalIds} />
+          <OrderDetails orderNum={orderNum} errorOrderNum={errorOrderNum} />
         </Modal>}
     </section>
   )

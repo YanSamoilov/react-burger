@@ -1,7 +1,7 @@
-import { INGREDIENTS_URL, ORDER_URL } from "./constants"
+import { SERVER_URL } from "./constants"
 
-export const getIngridientsData = async () => {
-  const response = await fetch(INGREDIENTS_URL);
+export const getIngredientsData = async () => {
+  const response = await fetch(`${SERVER_URL}ingredients`);
 
   if (response.ok) {
     return response.json();
@@ -12,7 +12,7 @@ export const getIngridientsData = async () => {
 }
 
 export const postOrder = async (arrayId) => {
-  const response = await fetch(ORDER_URL, {
+  const response = await fetch(`${SERVER_URL}orders`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

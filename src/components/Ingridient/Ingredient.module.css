@@ -1,9 +1,9 @@
-.ingridient {
+.ingredient {
   text-align: center;
   min-height: 48px;
 }
 
-.ingridient__price-container {
+.ingredient__price-container {
   display: flex;
   justify-content: center;
 }
