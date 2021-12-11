@@ -6,6 +6,16 @@
   flex-direction: column;
 }
 
+.burger-constructor__bunList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .burger-constructor__orderList {
   list-style-type: none;
   margin: 10 0;

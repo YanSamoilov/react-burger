@@ -1,11 +1,12 @@
 import done from 'images/done.svg';
+import PropTypes from 'prop-types';
 import OrderDetailsStyles from './OrderDetails.module.css';
 
-function OrderDetails() {
+function OrderDetails({ orderNum, errorOrderNum }) {
 
   return (
     <div className={`${OrderDetailsStyles.orderDetails} pt-30 pb-30`}>
-      <h1 className={`${OrderDetailsStyles.orderDetails__heading} text text_type_digits-large mb-8`}>034536</h1>
+      <h1 className={`${OrderDetailsStyles.orderDetails__heading} text text_type_digits-large mb-8`}>{orderNum || errorOrderNum}</h1>
       <p className={`${OrderDetailsStyles.orderDetails__text} text text_type_main-medium mb-15`}>
         идентификатор заказа
       </p>
@@ -18,7 +19,11 @@ function OrderDetails() {
       </p>
     </div>
   )
+}
 
+OrderDetails.propTypes = {
+  orderNum: PropTypes.number,
+  errorOrderNum: PropTypes.string
 }
 
 export default OrderDetails
