@@ -30,12 +30,6 @@
   max-height: calc(100vh - 496px);
 }
 
-.burger-constructor__orderList-element {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .burger-constructor__total-container {
   display: flex;
   align-items: center;

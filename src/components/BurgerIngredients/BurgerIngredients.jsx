@@ -1,45 +1,50 @@
-import { useState, useRef, useCallback, useContext, useMemo } from "react";
+import { useRef, useMemo } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import FullTab from "components/FullTab/FullTab";
 import Ingredient from "components/Ingridient/Ingredient";
 import IngredientDetails from "components/IngredientDetails/IngredientDetails";
 import Modal from "components/Modal/Modal";
 import BurgerIngrStyles from './BurgerIngredients.module.css';
-import { AllIngredientsContext } from "utils/appContext";
-
+import { ADD_INGREDIENT_DETAILS, REMOVE_INGREDIENT_DETAILS } from '../../services/actions/ingredientDetails';
 
 function BurgerIngredients() {
-  const [isModalActive, setIsModalActive] = useState(false);
-  const [selectIngredient, setSelectIngredient] = useState(null);
   const bunHeadingRef = useRef(null);
   const sauceHeadingRef = useRef(null);
   const mainIngredientHeadingRef = useRef(null);
-  const dataIngridients = useContext(AllIngredientsContext);
+  const { ingredientsData } = useSelector(state => state.feedIngredients);
+  const { isModalActive, ingredientDetails } = useSelector(state => state.ingredientDetails);
+  const dispatch = useDispatch();
 
   //Разделить все ингредиенты по типам в массивы
-  const bunIngredient = useMemo(() => dataIngridients.filter(product => product.type === 'bun'), [dataIngridients]);
-  const sauceIngredient = useMemo(() => dataIngridients.filter(product => product.type === 'sauce'), [dataIngridients]);
-  const mainIngredient = useMemo(() => dataIngridients.filter(product => product.type === 'main'), [dataIngridients]);
+  const bunIngredient = useMemo(() => ingredientsData.filter(product => product.type === 'bun'), [ingredientsData]);
+  const sauceIngredient = useMemo(() => ingredientsData.filter(product => product.type === 'sauce'), [ingredientsData]);
+  const mainIngredient = useMemo(() => ingredientsData.filter(product => product.type === 'main'), [ingredientsData]);
 
   //Найти объект ингредиента по выбранному id
   const findSelectedIngredient = (selectIngredientId) => {
-    return dataIngridients.find(ingr => ingr._id === selectIngredientId);
+    return ingredientsData.find(ingr => ingr._id === selectIngredientId);
   }
 
   //Открыть модальное окно с данными ингредиента
   const handleOpenIngredient = (id) => {
-    setSelectIngredient(findSelectedIngredient(id))
-    setIsModalActive(true);
+    dispatch({
+      type: ADD_INGREDIENT_DETAILS,
+      ingredientDetails: findSelectedIngredient(id),
+    })
   }
 
   //Закрыть модальное окно
   const handleCloseIngredient = () => {
-    setIsModalActive(false)
+    dispatch({
+      type: REMOVE_INGREDIENT_DETAILS,
+      ingredientDetails: null,
+    })
   }
 
   //Рендер списка ингредиента
   const renderIngredient = ({ image, name, price, _id }) => (
     <li id={_id} onClickCapture={() => handleOpenIngredient(_id)} key={_id} className={`${BurgerIngrStyles['burger-ingredients__list-elem']}`}>
-      <Ingredient image={image} name={name} price={price} />
+      <Ingredient image={image} name={name} price={price} id={_id} />
     </li>
   )
 
@@ -63,7 +68,7 @@ function BurgerIngredients() {
       </div>
       {isModalActive &&
         <Modal handleCloseModal={handleCloseIngredient}>
-          <IngredientDetails ingridient={selectIngredient}></IngredientDetails>
+          <IngredientDetails ingridient={ingredientDetails}></IngredientDetails>
         </Modal>}
     </section>
   )
