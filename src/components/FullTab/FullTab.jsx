@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 
-const FullTab = ({ bunHeadingRef, sauceHeadingRef, mainIngredientHeadingRef }) => {
-  const [current, setCurrent] = useState('one')
+const FullTab = ({ bunHeadingRef, sauceHeadingRef, mainIngredientHeadingRef, value }) => {
+
+  const [current, setCurrent] = useState(value);
+
+  useEffect(() => setCurrent(value));
+
   return (
     <div style={{ display: 'flex' }}>
       <Tab value="one" active={current === 'one'} onClick={(value) => {

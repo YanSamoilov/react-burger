@@ -1,4 +1,4 @@
-import { ADD_INGREDIENT_DETAILS, REMOVE_INGREDIENT_DETAILS } from "services/actions/ingredientDetails"
+import { ADD_INGREDIENT_DETAILS, REMOVE_INGREDIENT_DETAILS } from 'services/actions/ingredientDetails';
 
 const  ingredientDetailsInitialState = {
   isModalActive: false,

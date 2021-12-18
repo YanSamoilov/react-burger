@@ -2,6 +2,8 @@
   box-sizing: border-box;
   padding-left: 100px;
   padding-right: 100px;
+
+  width: 720px;
 }
 
 .orderDetails__text {

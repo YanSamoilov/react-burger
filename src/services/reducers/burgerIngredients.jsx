@@ -2,11 +2,11 @@ import {
   GET_FEED,
   GET_FEED_SUCCESS,
   GET_FEED_FAILED
-} from "services/actions/burgerIngredients";
+} from 'services/actions/burgerIngredients';
 
 const ingredientsInitialState = {
   isLoading: false,
-  errorMessage: false,
+  errorMessage: null,
   ingredientsData: [],
 }
 

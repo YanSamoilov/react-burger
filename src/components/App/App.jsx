@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import AppHeader from 'components/Header/Header';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DndProvider, DropTarget } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import BurgerIngredients from "components/BurgerIngredients/BurgerIngredients";
-import BurgerConstructor from "components/BurgerConstructor/BurgerConstructor";
-import { getIngredients } from "services/actions/burgerIngredients";
-import AppStyles from "./App.module.css";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import AppHeader from 'components/Header/Header';
+import BurgerIngredients from 'components/BurgerIngredients/BurgerIngredients';
+import BurgerConstructor from 'components/BurgerConstructor/BurgerConstructor';
+import { getIngredients } from 'services/actions/burgerIngredients';
+import AppStyles from './App.module.css';
 
 function App() {
 
@@ -30,10 +30,10 @@ function App() {
       <AppHeader />
       <main className={`${AppStyles.main} pr-5 pl-5`}>
         <>
-        <DndProvider backend={HTML5Backend}>
-          <BurgerIngredients />
+          <DndProvider backend={HTML5Backend}>
+            <BurgerIngredients />
             <BurgerConstructor />
-        </DndProvider>
+          </DndProvider>
         </>
       </main>
     </>

@@ -2,6 +2,7 @@ import { IngridientPropTypes } from "utils/constants";
 import IngredientDetailsStyles from './IngredientDetails.module.css';
 
 function IngredientDetails({ ingridient }) {
+
   return (
     <div className={`${IngredientDetailsStyles.ingredientDetails} pr-10 pl-10 pb-15`}>
       <h1 className={`text text_type_main-large`}>Детали ингредиента</h1>

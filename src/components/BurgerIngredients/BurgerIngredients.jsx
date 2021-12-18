@@ -1,58 +1,87 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import FullTab from "components/FullTab/FullTab";
-import Ingredient from "components/Ingridient/Ingredient";
-import IngredientDetails from "components/IngredientDetails/IngredientDetails";
-import Modal from "components/Modal/Modal";
-import BurgerIngrStyles from './BurgerIngredients.module.css';
+import FullTab from 'components/FullTab/FullTab';
+import Ingredient from 'components/Ingridient/Ingredient';
+import IngredientDetails from 'components/IngredientDetails/IngredientDetails';
+import Modal from 'components/Modal/Modal';
 import { ADD_INGREDIENT_DETAILS, REMOVE_INGREDIENT_DETAILS } from '../../services/actions/ingredientDetails';
+import BurgerIngrStyles from './BurgerIngredients.module.css';
 
 function BurgerIngredients() {
+
+  const dispatch = useDispatch();
+
   const bunHeadingRef = useRef(null);
   const sauceHeadingRef = useRef(null);
   const mainIngredientHeadingRef = useRef(null);
+
   const { ingredientsData } = useSelector(state => state.feedIngredients);
   const { isModalActive, ingredientDetails } = useSelector(state => state.ingredientDetails);
-  const dispatch = useDispatch();
 
-  //Разделить все ингредиенты по типам в массивы
+  const [value, setValue] = useState("one");
+
+  // Разделить все ингредиенты по типам в массивы.
   const bunIngredient = useMemo(() => ingredientsData.filter(product => product.type === 'bun'), [ingredientsData]);
   const sauceIngredient = useMemo(() => ingredientsData.filter(product => product.type === 'sauce'), [ingredientsData]);
   const mainIngredient = useMemo(() => ingredientsData.filter(product => product.type === 'main'), [ingredientsData]);
 
-  //Найти объект ингредиента по выбранному id
+  // Найти объект ингредиента по выбранному id.
   const findSelectedIngredient = (selectIngredientId) => {
     return ingredientsData.find(ingr => ingr._id === selectIngredientId);
-  }
+  };
 
-  //Открыть модальное окно с данными ингредиента
+  // Открыть модальное окно с данными ингредиента.
   const handleOpenIngredient = (id) => {
     dispatch({
       type: ADD_INGREDIENT_DETAILS,
       ingredientDetails: findSelectedIngredient(id),
     })
-  }
+  };
 
-  //Закрыть модальное окно
+  // Закрыть модальное окно.
   const handleCloseIngredient = () => {
     dispatch({
       type: REMOVE_INGREDIENT_DETAILS,
       ingredientDetails: null,
     })
-  }
+  };
 
-  //Рендер списка ингредиента
+  // Рендер списка ингредиента.
   const renderIngredient = ({ image, name, price, _id }) => (
     <li id={_id} onClickCapture={() => handleOpenIngredient(_id)} key={_id} className={`${BurgerIngrStyles['burger-ingredients__list-elem']}`}>
       <Ingredient image={image} name={name} price={price} id={_id} />
     </li>
-  )
+  );
+
+  // Расчет координат заголовков для своевременного переключения при скролле.
+  const handleScroll = useCallback((e) => {
+    // Координаты верхней части списка ингредиентов.
+    const mainBlockTopCoordinate = e.target.getBoundingClientRect().top;
+
+    // Получить координаты заголовков.
+    const getCoordinates = (ref) => {
+      return {
+        top: ref.current.getBoundingClientRect().top,
+      };
+    };
+
+    // Расчет близости заголовков к блоку ингредиентов.
+    const bunHeaderCoordinates = Math.abs(getCoordinates(bunHeadingRef).top - mainBlockTopCoordinate);
+    const sauceHeaderCoordinates = Math.abs(getCoordinates(sauceHeadingRef).top - mainBlockTopCoordinate);
+    const mainIngredientCoordinates = Math.abs(getCoordinates(mainIngredientHeadingRef).top - mainBlockTopCoordinate);
+
+    // Сравнение координат заголовков для актуальной их подсветки.
+    sauceHeaderCoordinates > mainIngredientCoordinates ?
+    setValue("three") :
+    bunHeaderCoordinates > sauceHeaderCoordinates ?
+    setValue("two") : setValue("one");
+  });
 
   return (
-    <section className={`${BurgerIngrStyles['burger-ingredients']} pt-10 mr-10`}>
+    <section className={`${BurgerIngrStyles['burger-ingredients']} pt-10 mr-10`} >
       <h1 className={`text text_type_main-large mb-5`}>Соберите бургер</h1>
-      <FullTab bunHeadingRef={bunHeadingRef} sauceHeadingRef={sauceHeadingRef} mainIngredientHeadingRef={mainIngredientHeadingRef} />
-      <div className={`${BurgerIngrStyles['burger-ingredients__container']}`}>
+      <FullTab bunHeadingRef={bunHeadingRef} sauceHeadingRef={sauceHeadingRef} mainIngredientHeadingRef={mainIngredientHeadingRef} value={value} />
+      <div className={`${BurgerIngrStyles['burger-ingredients__container']}`} onScroll={handleScroll}>
         <h2 ref={bunHeadingRef} className={`text text_type_main-medium mt-10 mb-6`}>Булки</h2>
         <ul className={`${BurgerIngrStyles['burger-ingredients__ingridients-list']} pl-4 pr-4`}>
           {bunIngredient.map(renderIngredient)}
