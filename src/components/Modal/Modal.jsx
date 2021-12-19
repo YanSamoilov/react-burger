@@ -29,7 +29,7 @@ function Modal(props) {
     return () => {
       document.removeEventListener('keydown', handleCloseEsc);
     }
-  }, []);
+  }, [props.handleCloseModal]);
 
   //Установить слушатель на клик вне области модального окна.
   useEffect(() => {
@@ -38,7 +38,7 @@ function Modal(props) {
     return () => {
       document.removeEventListener('click', handleCloseOverlay)
     }
-  });
+  }, [props.handleCloseModal]);
 
   return ReactDOM.createPortal(
     <div className={`${ModalStyle.modal} ${ModalStyle.modal_open} `}>
@@ -55,7 +55,8 @@ function Modal(props) {
 }
 
 Modal.propTypes = {
-  ingridient: PropTypes.func
+  children: PropTypes.node,
+  handleCloseModal: PropTypes.func.isRequired
 }
 
 export default Modal

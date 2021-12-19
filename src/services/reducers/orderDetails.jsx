@@ -1,4 +1,4 @@
-import { POST_ORDER_SUCCESS, POST_ORDER_FAILED, HANDLE_CLOSE_ORDER_MODAL} from '../actions/orderDetails';
+import { POST_ORDER_SUCCESS, POST_ORDER_FAILED, HANDLE_CLOSE_ORDER_MODAL, POST_ORDER_REQUEST} from '../actions/orderDetails';
 
 const orderDetailsInitialState = {
   orderNum: null,
@@ -7,16 +7,21 @@ const orderDetailsInitialState = {
 
 export const orderDetails = (state = orderDetailsInitialState, action) => {
   switch(action.type) {
+    case POST_ORDER_REQUEST: {
+      return {
+        ...state
+      }
+    }
     case POST_ORDER_SUCCESS: {
       return {
         ...state,
-        orderNum: action.feed
+        orderNum: action.orderNum
       }
     };
     case POST_ORDER_FAILED: {
       return {
-        ...state,
-        errorMessage: `Произошла ошибка: ${action.feed}. Обратитесь к администрации.`
+        orderNum: null,
+        errorMessage: `Произошла ошибка: ${action.error}. Обратитесь к администрации.`
       }
     };
     case HANDLE_CLOSE_ORDER_MODAL: {

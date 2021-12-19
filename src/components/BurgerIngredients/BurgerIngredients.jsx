@@ -16,7 +16,7 @@ function BurgerIngredients() {
   const mainIngredientHeadingRef = useRef(null);
 
   const { ingredientsData } = useSelector(state => state.feedIngredients);
-  const { isModalActive, ingredientDetails } = useSelector(state => state.ingredientDetails);
+  const { ingredientDetails } = useSelector(state => state.ingredientDetails);
 
   const [value, setValue] = useState("one");
 
@@ -72,9 +72,9 @@ function BurgerIngredients() {
 
     // Сравнение координат заголовков для актуальной их подсветки.
     sauceHeaderCoordinates > mainIngredientCoordinates ?
-    setValue("three") :
-    bunHeaderCoordinates > sauceHeaderCoordinates ?
-    setValue("two") : setValue("one");
+      setValue("three") :
+      bunHeaderCoordinates > sauceHeaderCoordinates ?
+        setValue("two") : setValue("one");
   });
 
   return (
@@ -95,10 +95,11 @@ function BurgerIngredients() {
           {mainIngredient.map(renderIngredient)}
         </ul>
       </div>
-      {isModalActive &&
+      {ingredientDetails && (
         <Modal handleCloseModal={handleCloseIngredient}>
-          <IngredientDetails ingridient={ingredientDetails}></IngredientDetails>
-        </Modal>}
+          <IngredientDetails ingredient={ingredientDetails}></IngredientDetails>
+        </Modal>
+      )}
     </section>
   )
 }

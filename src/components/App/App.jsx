@@ -17,7 +17,7 @@ function App() {
   //Получить список ингредиентов от сервера.
   useEffect(() => {
     dispatch(getIngredients())
-  }, []);
+  }, [dispatch]);
 
   if (errorMessage) {
     return (<p className={`${AppStyles.main__error} text text_type_main-default`}>Произошла ошибка: {errorMessage}</p>)

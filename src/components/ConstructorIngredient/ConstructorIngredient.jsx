@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR, CHANGE_INGREDIENT_POSITION } from '../../services/actions/burgerConstructor';
+import PropTypes from 'prop-types';
 import ConstructorIngredientStyles from './ConstructorIngredient.module.css';
 
 function ConstructorIngredient({ name, image, price, index }) {
@@ -58,5 +59,12 @@ function ConstructorIngredient({ name, image, price, index }) {
     </div>
   )
 }
+
+ConstructorIngredient.propTypes = {
+  name: PropTypes.string,
+  name: PropTypes.string,
+  price: PropTypes.number,
+  index: PropTypes.number,
+};
 
 export default ConstructorIngredient

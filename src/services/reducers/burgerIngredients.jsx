@@ -1,5 +1,5 @@
 import {
-  GET_FEED,
+  GET_FEED_REQUEST,
   GET_FEED_SUCCESS,
   GET_FEED_FAILED
 } from 'services/actions/burgerIngredients';
@@ -13,7 +13,7 @@ const ingredientsInitialState = {
 //Редьюсер получения ингредиентов от сервера.
 export const feedIngredients = (state = ingredientsInitialState, action) => {
   switch(action.type) {
-    case GET_FEED: {
+    case GET_FEED_REQUEST: {
       return {
         ...state,
         isLoading: true
@@ -28,8 +28,8 @@ export const feedIngredients = (state = ingredientsInitialState, action) => {
     }
     case GET_FEED_FAILED: {
       return {
-        ...state,
-        errorMessage: action.feed,
+        ingredientsData: [],
+        errorMessage: action.error,
         isLoading: false
       }
     }

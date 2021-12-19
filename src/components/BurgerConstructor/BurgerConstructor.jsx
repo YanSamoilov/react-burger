@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -13,9 +13,6 @@ import BurgConstructorStyles from './BurgerConstructor.module.css';
 function BurgerConstructor() {
 
   const dispatch = useDispatch();
-
-  const [totalIds, setTotalIds] = useState([]);
-  const [isActiveModal, setIsActiveModal] = useState(false);
 
   const errorMessage = useSelector(state => state.orderDetails.errorMessage);
   const allIngredientsData = useSelector(state => state.feedIngredients.ingredientsData);
@@ -32,17 +29,12 @@ function BurgerConstructor() {
     },
   });
 
-
-
   // Разделить выбранные ингредиенты для бургера на булки и внутренние ингредиенты.
   const bun = useMemo(() => constructorItems.find(product => product.type === 'bun'), [constructorItems]);
   const mainIngridient = useMemo(() => constructorItems.filter(product => product.type !== 'bun'), [constructorItems]);
 
   // Расчет итоговой стоимости.
   const totalPrice = useMemo(() => (bun ? bun.price : 0) * 2 + mainIngridient.reduce((acc, elem) => acc + elem.price, 0), [constructorItems]);
-
-  // Сбор всех id ингредиентов для конструктора.
-  useEffect(() => setTotalIds(constructorItems.map((el) => el._id)), [constructorItems])
 
   // Добавить ингредиент из списка в конструктор.
   const addItem = (item) => {
@@ -64,7 +56,7 @@ function BurgerConstructor() {
     }
   };
 
-  //  Создать элемент ингредиента в конструкторе.
+  //  Создать элемент ингредиента в конструкторе. Ключ на основе индекса.
   const createInnerIngredient = ({ image, name, price, _id }, ind) => {
     return (
       <li key={ind} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2`}>
@@ -80,9 +72,9 @@ function BurgerConstructor() {
   };
 
   // Создать элемент булки в конструкторе.
-  const createBunIngredient = ({ image, name, price, _id }, type, side) => {
+  const createBunIngredient = ({ image, name, price }, type, side) => {
     return (
-      <li key={`${_id}${side}`} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2 ml-8`}>
+      <li key={`${side}`} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2 ml-8`}>
         <ConstructorElement
           type={type}
           isLocked={true}
@@ -96,15 +88,14 @@ function BurgerConstructor() {
 
   //Получить номер заказа.
   const getOrder = () => {
+    const totalIds = constructorItems.map((el) => el._id);
     if (totalIds.length) {
       dispatch(getOrderDetails(totalIds));
-      setIsActiveModal(true)
     }
   };
 
   //Закрыть модальное окно.
   const handleCloseModal = () => {
-    setIsActiveModal(false)
     dispatch({
       type: HANDLE_CLOSE_ORDER_MODAL
     })
@@ -114,7 +105,7 @@ function BurgerConstructor() {
 
   return (
     <>
-      <section ref={dropTarget} className={ constructorBorder }>
+      <section ref={dropTarget} className={constructorBorder}>
         <ul className={`${BurgConstructorStyles['burger-constructor__bunList']}`}>
           {bun && createBunIngredient(bun, 'top', 'верх')}
           <ul className={`${BurgConstructorStyles['burger-constructor__orderList']}`}>
@@ -131,10 +122,11 @@ function BurgerConstructor() {
             Оформить заказ
           </Button>
         </div>
-        {isActiveModal &&
+        {(orderNum || errorMessage) && (
           <Modal handleCloseModal={handleCloseModal}>
             <OrderDetails orderNum={orderNum} errorOrderNum={errorMessage} />
-          </Modal>}
+          </Modal>
+        )}
       </section>
     </>
   );

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import PropTypes from 'prop-types';
 
 const FullTab = ({ bunHeadingRef, sauceHeadingRef, mainIngredientHeadingRef, value }) => {
 
   const [current, setCurrent] = useState(value);
 
-  useEffect(() => setCurrent(value));
+  useEffect(() => setCurrent(value), [value]);
 
   return (
     <div style={{ display: 'flex' }}>
@@ -30,5 +31,12 @@ const FullTab = ({ bunHeadingRef, sauceHeadingRef, mainIngredientHeadingRef, val
     </div>
   )
 }
+
+FullTab.propTypes = {
+  bunHeadingRef: PropTypes.object,
+  sauceHeadingRef: PropTypes.object,
+  mainIngredientHeadingRef: PropTypes.object,
+  value: PropTypes.string,
+};
 
 export default FullTab

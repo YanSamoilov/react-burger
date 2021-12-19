@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { useDrag } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -7,14 +7,12 @@ import IngStyles from './Ingredient.module.css';
 
 function Ingredient({ image, name, price, id }) {
 
-  const [count, setcount] = useState(0)
-
   const ingredientsInsideConstructor = useSelector(state => state.burgerConstructor.constructorElem);
 
   // Подсчет количества каждого ингредиента в конструкторе.
-  useEffect(() => {
-    setcount(ingredientsInsideConstructor.reduce((acc, el) => el._id === id ? acc + 1 : acc, 0))
-  }, [ingredientsInsideConstructor])
+  const count = useMemo(() =>
+    ingredientsInsideConstructor.reduce((acc, el) => el._id === id ? acc + 1 : acc, 0), [ingredientsInsideConstructor]
+  );
 
   const [{ opacity }, dragRef] = useDrag({
     type: 'ingredient',
@@ -40,7 +38,8 @@ function Ingredient({ image, name, price, id }) {
 Ingredient.propTypes = {
   image: PropTypes.string,
   name: PropTypes.string,
-  price: PropTypes.number
+  price: PropTypes.number,
+  id: PropTypes.string,
 }
 
 export default Ingredient
