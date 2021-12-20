@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useDrop } from 'react-dnd';
+import { v4 as uuidv4 } from 'uuid';
 import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from 'components/Modal/Modal';
 import OrderDetails from 'components/OrderDetails/OrderDetails';
@@ -34,7 +35,7 @@ function BurgerConstructor() {
   const mainIngridient = useMemo(() => constructorItems.filter(product => product.type !== 'bun'), [constructorItems]);
 
   // Расчет итоговой стоимости.
-  const totalPrice = useMemo(() => (bun ? bun.price : 0) * 2 + mainIngridient.reduce((acc, elem) => acc + elem.price, 0), [constructorItems]);
+  const totalPrice = useMemo(() => (bun ? bun.price : 0) * 2 + mainIngridient.reduce((acc, elem) => acc + elem.price, 0), [bun, mainIngridient]);
 
   // Добавить ингредиент из списка в конструктор.
   const addItem = (item) => {
@@ -51,30 +52,33 @@ function BurgerConstructor() {
     else {
       dispatch({
         type: ADD_INGREDIENT_INSIDE_CONSTRUCTOR,
-        ingredient: dropedIngredient
+        ingredient: {
+          ...dropedIngredient,
+          uid: uuidv4()
+        }
       })
     }
   };
 
   //  Создать элемент ингредиента в конструкторе. Ключ на основе индекса.
-  const createInnerIngredient = ({ image, name, price, _id }, ind) => {
+  const createInnerIngredient = ({ image, name, price, _id, uid }) => {
     return (
-      <li key={ind} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2`}>
+      <li key={uid} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2`}>
         <ConstructorIngredient
           name={name}
           image={image}
           price={price}
           id={_id}
-          index={ind}
+          uid={uid}
         />
       </li>
     );
   };
 
   // Создать элемент булки в конструкторе.
-  const createBunIngredient = ({ image, name, price }, type, side) => {
+  const createBunIngredient = ({ image, name, price, uid }, type, side) => {
     return (
-      <li key={`${side}`} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2 ml-8`}>
+      <li key={`${uid}${side}`} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2 ml-8`}>
         <ConstructorElement
           type={type}
           isLocked={true}

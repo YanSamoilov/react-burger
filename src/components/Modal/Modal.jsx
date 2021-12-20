@@ -6,48 +6,50 @@ import { modalContainer } from 'utils/constants';
 import PropTypes from 'prop-types';
 import ModalStyle from './Modal.module.css';
 
-function Modal(props) {
+function Modal({ children, handleCloseModal }) {
 
   const overlayRef = useRef(null);
 
-  // Закрыть модальное окно по нажатию Escape.
-  const handleCloseEsc = (evt) => {
-    if (evt.key === 'Escape')
-      props.handleCloseModal();
-  };
-
-  // Закрыть модальное окно по нажатию overlay.
-  const handleCloseOverlay = (evt) => {
-    if (evt.target === overlayRef.current)
-      props.handleCloseModal();
-  };
-
   //Установить и удалить слушатель на нажатие Esc.
   useEffect(() => {
+
+    // Закрыть модальное окно по нажатию Escape.
+    const handleCloseEsc = (evt) => {
+      if (evt.key === 'Escape')
+        handleCloseModal();
+    };
+
     document.addEventListener('keydown', handleCloseEsc);
 
     return () => {
       document.removeEventListener('keydown', handleCloseEsc);
     }
-  }, [props.handleCloseModal]);
+  }, [handleCloseModal]);
 
   //Установить слушатель на клик вне области модального окна.
   useEffect(() => {
+
+    // Закрыть модальное окно по нажатию overlay.
+    const handleCloseOverlay = (evt) => {
+      if (evt.target === overlayRef.current)
+        handleCloseModal();
+    };
+
     document.addEventListener('click', handleCloseOverlay)
 
     return () => {
       document.removeEventListener('click', handleCloseOverlay)
     }
-  }, [props.handleCloseModal]);
+  }, [handleCloseModal]);
 
   return ReactDOM.createPortal(
     <div className={`${ModalStyle.modal} ${ModalStyle.modal_open} `}>
       <ModalOverlay overlayRef={overlayRef} />
       <div className={ModalStyle.modal__content}>
-        <button className={`${ModalStyle['modal__button-close']}`} onClick={props.handleCloseModal}>
+        <button className={`${ModalStyle['modal__button-close']}`} onClick={handleCloseModal}>
           <CloseIcon type="primary" />
         </button>
-        {props.children}
+        {children}
       </div>
     </div>,
     modalContainer

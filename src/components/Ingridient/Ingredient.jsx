@@ -36,10 +36,10 @@ function Ingredient({ image, name, price, id }) {
 }
 
 Ingredient.propTypes = {
-  image: PropTypes.string,
-  name: PropTypes.string,
-  price: PropTypes.number,
-  id: PropTypes.string,
+  image: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired
 }
 
 export default Ingredient

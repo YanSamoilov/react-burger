@@ -33,10 +33,10 @@ const FullTab = ({ bunHeadingRef, sauceHeadingRef, mainIngredientHeadingRef, val
 }
 
 FullTab.propTypes = {
-  bunHeadingRef: PropTypes.object,
-  sauceHeadingRef: PropTypes.object,
-  mainIngredientHeadingRef: PropTypes.object,
-  value: PropTypes.string,
+  bunHeadingRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLHeadingElement) }),
+  sauceHeadingRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLHeadingElement) }),
+  mainIngredientHeadingRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLHeadingElement) }),
+  value: PropTypes.string.isRequired
 };
 
 export default FullTab

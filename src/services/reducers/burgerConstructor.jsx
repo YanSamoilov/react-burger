@@ -31,19 +31,10 @@ export const burgerConstructor = (state = burgerConstructorInitialState, action)
       }
     }
     case REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR: {
-      // Если булки в массиве нет, то удаление по обычному индексу, иначе к индексу необходимо прибавить 1.
-      if (state.constructorElem[0].type !== 'bun') {
-        return {
-          ...state,
-          constructorElem: [...state.constructorElem].filter((item, ind) => ind !== action.ind)
-        }
-      }
-      else {
-        return {
-          ...state,
-          constructorElem: [...state.constructorElem].filter((item, ind) => ind !== action.ind + 1)
-        }
-      }
+      return {
+            ...state,
+            constructorElem: [...state.constructorElem].filter((item) => item.uid !== action.uid)
+          }
     }
     case TOGGLE_BUN_INSIDE_CONSTRUCTOR: {
       return {
@@ -54,14 +45,14 @@ export const burgerConstructor = (state = burgerConstructorInitialState, action)
     case CHANGE_INGREDIENT_POSITION: {
       return {
         ...state,
-        constructorElem: [...state.constructorElem].map((item, idx) => {
-          if (idx === action.dragIndex) {
+        constructorElem: [...state.constructorElem].map((item) => {
+          if (item.uid === action.dragUid) {
             return [...state.constructorElem].find(
-              (item, idx) => idx === action.hoverIndex
+              (item) => item.uid === action.hoverUid
             );
-          } else if (idx === action.hoverIndex) {
+          } else if (item.uid === action.hoverUid) {
             return [...state.constructorElem].find(
-              (item, idx) => idx === action.dragIndex
+              (item) => item.uid === action.dragUid
             );
           } else return item;
         }),

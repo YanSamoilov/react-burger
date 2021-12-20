@@ -1,35 +1,27 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR, CHANGE_INGREDIENT_POSITION } from '../../services/actions/burgerConstructor';
 import PropTypes from 'prop-types';
 import ConstructorIngredientStyles from './ConstructorIngredient.module.css';
 
-function ConstructorIngredient({ name, image, price, index }) {
+function ConstructorIngredient({ name, image, price, uid }) {
 
   const dispatch = useDispatch();
 
-  const constructorItems = useSelector((state) => state.burgerConstructor.constructorElem);
-
-  const isBun = constructorItems[0].type === "bun";
-
   const [, dragRef] = useDrag({
     type: 'constructor-item',
-    item: { index }
+    item: { uid }
   });
 
   const [, dropRef] = useDrop({
     accept: 'constructor-item',
     hover: (item) => {
-      const dragIndex = item.index;
-      const hoverIndex = index;
-
       dispatch({
         type: CHANGE_INGREDIENT_POSITION,
-        dragIndex: dragIndex + (isBun ? 1 : 0),
-        hoverIndex: hoverIndex + (isBun ? 1 : 0)
+        dragUid: item.uid,
+        hoverUid: uid
       })
-      item.index = hoverIndex
     }
   });
 
@@ -39,10 +31,10 @@ function ConstructorIngredient({ name, image, price, index }) {
   }
 
   // Удалить ингредиент из конструктора.
-  const handleDeleteIngredient = (ind) => {
+  const handleDeleteIngredient = (uid) => {
     dispatch({
       type: REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR,
-      ind: ind,
+      uid: uid
     })
   };
 
@@ -54,17 +46,17 @@ function ConstructorIngredient({ name, image, price, index }) {
         text={name}
         price={price}
         thumbnail={image}
-        handleClose={() => handleDeleteIngredient(index)}
+        handleClose={() => handleDeleteIngredient(uid)}
       />
     </div>
   )
 }
 
 ConstructorIngredient.propTypes = {
-  name: PropTypes.string,
-  name: PropTypes.string,
-  price: PropTypes.number,
-  index: PropTypes.number,
+  name: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  uid: PropTypes.string.isRequired
 };
 
 export default ConstructorIngredient
