@@ -1,28 +1,23 @@
-import { useState, useEffect } from "react";
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import AppHeader from 'components/Header/Header';
-import BurgerIngredients from "components/BurgerIngredients/BurgerIngredients";
-import BurgerConstructor from "components/BurgerConstructor/BurgerConstructor";
-import { AllIngredientsContext } from "utils/appContext";
-import { getIngredientsData } from "utils/api";
-import AppStyles from "./App.module.css";
+import BurgerIngredients from 'components/BurgerIngredients/BurgerIngredients';
+import BurgerConstructor from 'components/BurgerConstructor/BurgerConstructor';
+import { getIngredients } from 'services/actions/burgerIngredients';
+import AppStyles from './App.module.css';
 
 function App() {
 
-  const [ingredientData, setIngredientData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const dispatch = useDispatch();
 
+  const { errorMessage, isLoading } = useSelector(state => state.feedIngredients)
+
+  //Получить список ингредиентов от сервера.
   useEffect(() => {
-    getIngredientsData()
-      .then((res) => {
-        setIngredientData(res.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setErrorMessage(error);
-        setIsLoading(false);
-      })
-  }, [])
+    dispatch(getIngredients())
+  }, [dispatch]);
 
   if (errorMessage) {
     return (<p className={`${AppStyles.main__error} text text_type_main-default`}>Произошла ошибка: {errorMessage}</p>)
@@ -35,10 +30,10 @@ function App() {
       <AppHeader />
       <main className={`${AppStyles.main} pr-5 pl-5`}>
         <>
-          <AllIngredientsContext.Provider value={ingredientData}>
+          <DndProvider backend={HTML5Backend}>
             <BurgerIngredients />
             <BurgerConstructor />
-          </AllIngredientsContext.Provider>
+          </DndProvider>
         </>
       </main>
     </>

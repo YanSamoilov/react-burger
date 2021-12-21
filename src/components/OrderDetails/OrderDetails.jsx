@@ -6,7 +6,12 @@ function OrderDetails({ orderNum, errorOrderNum }) {
 
   return (
     <div className={`${OrderDetailsStyles.orderDetails} pt-30 pb-30`}>
-      <h1 className={`${OrderDetailsStyles.orderDetails__heading} text text_type_digits-large mb-8`}>{orderNum || errorOrderNum}</h1>
+      {orderNum &&
+        <h1 className={`${OrderDetailsStyles.orderDetails__heading} text text_type_digits-large mb-8`}>{orderNum}</h1>
+      }
+      {errorOrderNum &&
+        <h1 className={`${OrderDetailsStyles.orderDetails__heading} text text_type_digits-default mb-8`}>{errorOrderNum}</h1>
+      }
       <p className={`${OrderDetailsStyles.orderDetails__text} text text_type_main-medium mb-15`}>
         идентификатор заказа
       </p>

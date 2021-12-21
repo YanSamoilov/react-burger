@@ -1,52 +1,55 @@
-import { useRef, useEffect } from "react";
-import ReactDOM from "react-dom";
-import PropTypes from 'prop-types';
+import { useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import ModalOverlay from "components/ModalOverlay/ModalOverlay";
-import { modalContainer } from "utils/constants";
-import ModalStyle from "./Modal.module.css"
+import ModalOverlay from 'components/ModalOverlay/ModalOverlay';
+import { modalContainer } from 'utils/constants';
+import PropTypes from 'prop-types';
+import ModalStyle from './Modal.module.css';
 
-function Modal(props) {
-  const overlayRef = useRef(null)
+function Modal({ children, handleCloseModal }) {
 
-  // Закрыть модальное окно по нажатию Escape.
-  const handleCloseEsc = (evt) => {
-    if (evt.key === 'Escape')
-      props.handleCloseModal();
-  }
+  const overlayRef = useRef(null);
 
-  // Закрыть модальное окно по нажатию overlay.
-  const handleCloseOverlay = (evt) => {
-    if (evt.target === overlayRef.current)
-      props.handleCloseModal();
-  }
-
-  //Установить и удалить слушатель на нажатие Esc
+  //Установить и удалить слушатель на нажатие Esc.
   useEffect(() => {
+
+    // Закрыть модальное окно по нажатию Escape.
+    const handleCloseEsc = (evt) => {
+      if (evt.key === 'Escape')
+        handleCloseModal();
+    };
+
     document.addEventListener('keydown', handleCloseEsc);
 
     return () => {
       document.removeEventListener('keydown', handleCloseEsc);
     }
-  }, [])
+  }, [handleCloseModal]);
 
-  //Установить слушатель на клик вне области модального окна
+  //Установить слушатель на клик вне области модального окна.
   useEffect(() => {
+
+    // Закрыть модальное окно по нажатию overlay.
+    const handleCloseOverlay = (evt) => {
+      if (evt.target === overlayRef.current)
+        handleCloseModal();
+    };
+
     document.addEventListener('click', handleCloseOverlay)
 
     return () => {
       document.removeEventListener('click', handleCloseOverlay)
     }
-  })
+  }, [handleCloseModal]);
 
   return ReactDOM.createPortal(
     <div className={`${ModalStyle.modal} ${ModalStyle.modal_open} `}>
       <ModalOverlay overlayRef={overlayRef} />
       <div className={ModalStyle.modal__content}>
-        <button className={`${ModalStyle['modal__button-close']}`} onClick={props.handleCloseModal}>
+        <button className={`${ModalStyle['modal__button-close']}`} onClick={handleCloseModal}>
           <CloseIcon type="primary" />
         </button>
-        {props.children}
+        {children}
       </div>
     </div>,
     modalContainer
@@ -54,7 +57,8 @@ function Modal(props) {
 }
 
 Modal.propTypes = {
-  ingridient: PropTypes.func
+  children: PropTypes.node,
+  handleCloseModal: PropTypes.func.isRequired
 }
 
 export default Modal

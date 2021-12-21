@@ -1,4 +1,4 @@
-import { SERVER_URL } from "./constants"
+import { SERVER_URL } from './constants';
 
 export const getIngredientsData = async () => {
   const response = await fetch(`${SERVER_URL}ingredients`);
@@ -9,7 +9,7 @@ export const getIngredientsData = async () => {
   else {
     return Promise.reject(response.status);
   }
-}
+};
 
 export const postOrder = async (arrayId) => {
   const response = await fetch(`${SERVER_URL}orders`, {
@@ -25,4 +25,4 @@ export const postOrder = async (arrayId) => {
   else {
     return Promise.reject(response.status);
   }
-}
+};
