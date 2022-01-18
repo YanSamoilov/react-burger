@@ -11,7 +11,7 @@ export const getIngredientsData = async () => {
   }
 };
 
-export const postOrder = async (arrayId) => {
+export const postOrder = async (arrayId: ReadonlyArray<string>) => {
   const response = await fetch(`${SERVER_URL}orders`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

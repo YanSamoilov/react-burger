@@ -1,13 +1,21 @@
-import { ADD_INGREDIENT_INSIDE_CONSTRUCTOR } from 'services/actions/burgerConstructor';
-import { REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR } from 'services/actions/burgerConstructor';
-import { TOGGLE_BUN_INSIDE_CONSTRUCTOR } from 'services/actions/burgerConstructor';
-import { CHANGE_INGREDIENT_POSITION } from 'services/actions/burgerConstructor';
+import {
+  ADD_INGREDIENT_INSIDE_CONSTRUCTOR,
+  REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR,
+  TOGGLE_BUN_INSIDE_CONSTRUCTOR,
+  CHANGE_INGREDIENT_POSITION
+} from '../constants/burgerConstructor';
+import { TBurgerConstructorActions } from '../actions/burgerConstructor';
+import { IIngredient } from '../types/data';
 
-const burgerConstructorInitialState = {
+type TBurgerConstructorInitialState = {
+  constructorElem: Array<IIngredient>;
+}
+
+const burgerConstructorInitialState: TBurgerConstructorInitialState = {
   constructorElem: []
 };
 
-export const burgerConstructor = (state = burgerConstructorInitialState, action) => {
+export const burgerConstructor = (state = burgerConstructorInitialState, action: TBurgerConstructorActions): TBurgerConstructorInitialState => {
   switch (action.type) {
     case ADD_INGREDIENT_INSIDE_CONSTRUCTOR: {
       // Если добавляется булка, то она становится первой в массиве, иначе ингредиенты добавляются в конец.
@@ -49,11 +57,11 @@ export const burgerConstructor = (state = burgerConstructorInitialState, action)
           if (item.uid === action.dragUid) {
             return [...state.constructorElem].find(
               (item) => item.uid === action.hoverUid
-            );
+            )!;
           } else if (item.uid === action.hoverUid) {
             return [...state.constructorElem].find(
               (item) => item.uid === action.dragUid
-            );
+            )!;
           } else return item;
         }),
       };

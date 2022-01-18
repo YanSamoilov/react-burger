@@ -1,7 +1,7 @@
-import { IngridientPropTypes } from "utils/constants";
 import IngredientDetailsStyles from './IngredientDetails.module.css';
+import { IIngredient, IIngredientDetails } from '../../services/types/data';
 
-function IngredientDetails({ ingredient }) {
+function IngredientDetails ({ ingredient }: IIngredientDetails<IIngredient>) {
 
   return (
     <div className={`${IngredientDetailsStyles.ingredientDetails} pr-10 pl-10 pb-15`}>
@@ -32,10 +32,6 @@ function IngredientDetails({ ingredient }) {
       </ul>
     </div>
   )
-}
-
-IngredientDetails.propTypes = {
-  ingredient: IngridientPropTypes.isRequired
 }
 
 export default IngredientDetails

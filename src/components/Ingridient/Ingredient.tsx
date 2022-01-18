@@ -1,17 +1,17 @@
 import { useMemo } from 'react';
 import { useDrag } from 'react-dnd';
-import { useSelector } from 'react-redux';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
+import { IIngredientProps } from 'services/types/data';
+import { useAppSelector } from 'services/types/hooks';
 import IngStyles from './Ingredient.module.css';
 
-function Ingredient({ image, name, price, id }) {
+function Ingredient({ image, name, price, id }: IIngredientProps) {
 
-  const ingredientsInsideConstructor = useSelector(state => state.burgerConstructor.constructorElem);
+  const ingredientsInsideConstructor = useAppSelector(state => state.burgerConstructor.constructorElem);
 
   // Подсчет количества каждого ингредиента в конструкторе.
   const count = useMemo(() =>
-    ingredientsInsideConstructor.reduce((acc, el) => el._id === id ? acc + 1 : acc, 0), [ingredientsInsideConstructor]
+    ingredientsInsideConstructor.reduce((acc: number, el: {_id: string}) => el._id === id ? acc + 1 : acc, 0), [ingredientsInsideConstructor]
   );
 
   const [{ opacity }, dragRef] = useDrag({
@@ -33,13 +33,6 @@ function Ingredient({ image, name, price, id }) {
       <h2 className={`${IngStyles['ingredient']} text text_type_main-default`}>{name}</h2>
     </div>
   )
-}
-
-Ingredient.propTypes = {
-  image: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired
 }
 
 export default Ingredient
