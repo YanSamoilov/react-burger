@@ -2,17 +2,25 @@ import {
   GET_FEED_REQUEST,
   GET_FEED_SUCCESS,
   GET_FEED_FAILED
-} from 'services/actions/burgerIngredients';
+} from 'services/constants/burgerIngredients';
+import { IIngredient } from '../types/data';
+import { TBurgerIngredientsActions } from '../actions/burgerIngredients';
 
-const ingredientsInitialState = {
+export type TIngredientsInitialState = {
+  isLoading: boolean;
+  errorMessage: null | string;
+  ingredientsData: ReadonlyArray<IIngredient>;
+}
+
+export const ingredientsInitialState: TIngredientsInitialState = {
   isLoading: false,
   errorMessage: null,
   ingredientsData: [],
 }
 
 //Редьюсер получения ингредиентов от сервера.
-export const feedIngredients = (state = ingredientsInitialState, action) => {
-  switch(action.type) {
+export const feedIngredients = (state = ingredientsInitialState, action: TBurgerIngredientsActions): TIngredientsInitialState => {
+  switch (action.type) {
     case GET_FEED_REQUEST: {
       return {
         ...state,

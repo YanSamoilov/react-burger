@@ -1,20 +1,20 @@
-import { useRef, useEffect } from 'react';
+import { FC, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import ModalOverlay from 'components/ModalOverlay/ModalOverlay';
 import { modalContainer } from 'utils/constants';
-import PropTypes from 'prop-types';
+import { IModalProps } from 'services/types/data';
 import ModalStyle from './Modal.module.css';
 
-function Modal({ children, handleCloseModal }) {
+export const Modal: FC<IModalProps> = ({ children, handleCloseModal }) => {
 
-  const overlayRef = useRef(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   //Установить и удалить слушатель на нажатие Esc.
   useEffect(() => {
 
     // Закрыть модальное окно по нажатию Escape.
-    const handleCloseEsc = (evt) => {
+    const handleCloseEsc = (evt: KeyboardEvent) => {
       if (evt.key === 'Escape')
         handleCloseModal();
     };
@@ -30,7 +30,7 @@ function Modal({ children, handleCloseModal }) {
   useEffect(() => {
 
     // Закрыть модальное окно по нажатию overlay.
-    const handleCloseOverlay = (evt) => {
+    const handleCloseOverlay = (evt: MouseEvent) => {
       if (evt.target === overlayRef.current)
         handleCloseModal();
     };
@@ -54,11 +54,6 @@ function Modal({ children, handleCloseModal }) {
     </div>,
     modalContainer
   )
-}
-
-Modal.propTypes = {
-  children: PropTypes.node,
-  handleCloseModal: PropTypes.func.isRequired
 }
 
 export default Modal

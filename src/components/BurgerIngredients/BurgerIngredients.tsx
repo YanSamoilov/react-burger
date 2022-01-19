@@ -1,22 +1,23 @@
 import { useRef, useMemo, useCallback, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import FullTab from 'components/FullTab/FullTab';
 import Ingredient from 'components/Ingridient/Ingredient';
 import IngredientDetails from 'components/IngredientDetails/IngredientDetails';
 import Modal from 'components/Modal/Modal';
-import { ADD_INGREDIENT_DETAILS, REMOVE_INGREDIENT_DETAILS } from '../../services/actions/ingredientDetails';
+import { ADD_INGREDIENT_DETAILS, REMOVE_INGREDIENT_DETAILS } from '../../services/constants/ingredientDetails';
+import { IIngredient } from '../../services/types/data';
+import { useAppSelector, useAppDispatch } from 'services/types/hooks';
 import BurgerIngrStyles from './BurgerIngredients.module.css';
 
 function BurgerIngredients() {
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const bunHeadingRef = useRef(null);
-  const sauceHeadingRef = useRef(null);
-  const mainIngredientHeadingRef = useRef(null);
+  const bunHeadingRef = useRef<HTMLHeadingElement>(null);
+  const sauceHeadingRef = useRef<HTMLHeadingElement>(null);
+  const mainIngredientHeadingRef = useRef<HTMLHeadingElement>(null);
 
-  const { ingredientsData } = useSelector(state => state.feedIngredients);
-  const { ingredientDetails } = useSelector(state => state.ingredientDetails);
+  const { ingredientsData } = useAppSelector(state => state.feedIngredients);
+  const { ingredientDetails } = useAppSelector(state => state.ingredientDetails);
 
   const [value, setValue] = useState("one");
 
@@ -26,12 +27,12 @@ function BurgerIngredients() {
   const mainIngredient = useMemo(() => ingredientsData.filter(product => product.type === 'main'), [ingredientsData]);
 
   // Найти объект ингредиента по выбранному id.
-  const findSelectedIngredient = (selectIngredientId) => {
+  const findSelectedIngredient = (selectIngredientId: string) => {
     return ingredientsData.find(ingr => ingr._id === selectIngredientId);
   };
 
   // Открыть модальное окно с данными ингредиента.
-  const handleOpenIngredient = (id) => {
+  const handleOpenIngredient = (id: string) => {
     dispatch({
       type: ADD_INGREDIENT_DETAILS,
       ingredientDetails: findSelectedIngredient(id),
@@ -47,7 +48,7 @@ function BurgerIngredients() {
   };
 
   // Рендер списка ингредиента.
-  const renderIngredient = ({ image, name, price, _id }) => (
+  const renderIngredient = ({ image, name, price, _id }: IIngredient) => (
     <li id={_id} onClickCapture={() => handleOpenIngredient(_id)} key={_id} className={`${BurgerIngrStyles['burger-ingredients__list-elem']}`}>
       <Ingredient image={image} name={name} price={price} id={_id} />
     </li>
@@ -56,16 +57,23 @@ function BurgerIngredients() {
   // Расчет координат заголовков для своевременного переключения при скролле.
   const handleScroll = useCallback((e) => {
     // Координаты верхней части списка ингредиентов.
-    const mainBlockTopCoordinate = e.target.getBoundingClientRect().top;
+    const mainBlockTopCoordinate: number = e.target.getBoundingClientRect().top;
 
     // Получить координаты заголовков.
-    const getCoordinates = (ref) => {
-      return {
-        top: ref.current.getBoundingClientRect().top,
-      };
+    const getCoordinates = (ref: React.RefObject<HTMLHeadingElement>) => {
+      if (ref.current !== null) {
+        return {
+          top: ref.current.getBoundingClientRect().top,
+        };
+      } else {
+        return {
+          top: mainBlockTopCoordinate,
+        };
+      }
     };
 
     // Расчет близости заголовков к блоку ингредиентов.
+
     const bunHeaderCoordinates = Math.abs(getCoordinates(bunHeadingRef).top - mainBlockTopCoordinate);
     const sauceHeaderCoordinates = Math.abs(getCoordinates(sauceHeadingRef).top - mainBlockTopCoordinate);
     const mainIngredientCoordinates = Math.abs(getCoordinates(mainIngredientHeadingRef).top - mainBlockTopCoordinate);
@@ -75,7 +83,7 @@ function BurgerIngredients() {
       setValue("three") :
       bunHeaderCoordinates > sauceHeaderCoordinates ?
         setValue("two") : setValue("one");
-  });
+  }, []);
 
   return (
     <section className={`${BurgerIngrStyles['burger-ingredients']} pt-10 mr-10`} >

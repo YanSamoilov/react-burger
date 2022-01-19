@@ -1,31 +1,34 @@
 import { useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import { v4 as uuidv4 } from 'uuid';
 import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from 'components/Modal/Modal';
 import OrderDetails from 'components/OrderDetails/OrderDetails';
 import ConstructorIngredient from 'components/ConstructorIngredient/ConstructorIngredient';
-import { HANDLE_CLOSE_ORDER_MODAL } from '../../services/actions/orderDetails';
-import { ADD_INGREDIENT_INSIDE_CONSTRUCTOR, TOGGLE_BUN_INSIDE_CONSTRUCTOR } from '../../services/actions/burgerConstructor';
+import { HANDLE_CLOSE_ORDER_MODAL } from '../../services/constants/orderDetails';
+import { ADD_INGREDIENT_INSIDE_CONSTRUCTOR, TOGGLE_BUN_INSIDE_CONSTRUCTOR } from '../../services/constants/burgerConstructor';
 import { getOrderDetails } from '../../services/actions/orderDetails';
+import { IIngredient, IDroppedIngredientId } from '../../services/types/data';
+import { useAppSelector, useAppDispatch } from 'services/types/hooks';
 import BurgConstructorStyles from './BurgerConstructor.module.css';
+import ModalOverlay from 'components/ModalOverlay/ModalOverlay';
 
 function BurgerConstructor() {
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const errorMessage = useSelector(state => state.orderDetails.errorMessage);
-  const allIngredientsData = useSelector(state => state.feedIngredients.ingredientsData);
-  const orderNum = useSelector(state => state.orderDetails.orderNum);
-  const constructorItems = useSelector(state => state.burgerConstructor.constructorElem);
+  const errorMessage = useAppSelector(state => state.orderDetails.errorMessage);
+  const allIngredientsData = useAppSelector(state => state.feedIngredients.ingredientsData);
+  const orderNum = useAppSelector(state => state.orderDetails.orderNum);
+  const isLoading = useAppSelector(state => state.orderDetails.isLoading);
+  const constructorItems = useAppSelector(state => state.burgerConstructor.constructorElem);
 
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
     collect: (monitor) => ({
       isHover: monitor.isOver(),
     }),
-    drop(item) {
+    drop(item: IDroppedIngredientId) {
       addItem(item);
     },
   });
@@ -38,37 +41,38 @@ function BurgerConstructor() {
   const totalPrice = useMemo(() => (bun ? bun.price : 0) * 2 + mainIngridient.reduce((acc, elem) => acc + elem.price, 0), [bun, mainIngridient]);
 
   // Добавить ингредиент из списка в конструктор.
-  const addItem = (item) => {
+  const addItem = (item: IDroppedIngredientId) => {
     // Найти перетаскиваемый ингредиент в полном списке ингредиентов.
-    const dropedIngredient = allIngredientsData.find(ingr => ingr._id === item.id)
+    const dropedIngredient: IIngredient | undefined = allIngredientsData.find(ingr => ingr._id === item.id)
 
     // Если есть булка и перетаскиваемый объект тоже булка, то заменить в конструкторе, иначе добавить ингредиент.
-    if (bun && dropedIngredient.type === 'bun') {
-      dispatch({
-        type: TOGGLE_BUN_INSIDE_CONSTRUCTOR,
-        ingredient: dropedIngredient
-      })
-    }
-    else {
-      dispatch({
-        type: ADD_INGREDIENT_INSIDE_CONSTRUCTOR,
-        ingredient: {
-          ...dropedIngredient,
-          uid: uuidv4()
-        }
-      })
+    if (dropedIngredient !== undefined) {
+      if (bun && dropedIngredient.type === 'bun') {
+        dispatch({
+          type: TOGGLE_BUN_INSIDE_CONSTRUCTOR,
+          ingredient: dropedIngredient
+        })
+      }
+      else {
+        dispatch({
+          type: ADD_INGREDIENT_INSIDE_CONSTRUCTOR,
+          ingredient: {
+            ...dropedIngredient,
+            uid: uuidv4()
+          }
+        })
+      }
     }
   };
 
   //  Создать элемент ингредиента в конструкторе. Ключ на основе индекса.
-  const createInnerIngredient = ({ image, name, price, _id, uid }) => {
+  const createInnerIngredient = ({ image, name, price, uid }: IIngredient) => {
     return (
       <li key={uid} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2`}>
         <ConstructorIngredient
           name={name}
           image={image}
           price={price}
-          id={_id}
           uid={uid}
         />
       </li>
@@ -76,7 +80,7 @@ function BurgerConstructor() {
   };
 
   // Создать элемент булки в конструкторе.
-  const createBunIngredient = ({ image, name, price, uid }, type, side) => {
+  const createBunIngredient = ({ image, name, price, uid }: IIngredient, type: 'top' | 'bottom', side: string) => {
     return (
       <li key={`${uid}${side}`} className={`${BurgConstructorStyles['burger-constructor__orderList-element']} mr-2 ml-8`}>
         <ConstructorElement
@@ -92,7 +96,7 @@ function BurgerConstructor() {
 
   //Получить номер заказа.
   const getOrder = () => {
-    const totalIds = constructorItems.map((el) => el._id);
+    const totalIds: Array<string> = constructorItems.map((el) => el._id);
     if (totalIds.length) {
       dispatch(getOrderDetails(totalIds));
     }
@@ -126,6 +130,11 @@ function BurgerConstructor() {
             Оформить заказ
           </Button>
         </div>
+        {isLoading && (
+          <ModalOverlay>
+            <div className={`${BurgConstructorStyles['burger-constructor__order-preloader']}`}></div>
+          </ModalOverlay>
+        )}
         {(orderNum || errorMessage) && (
           <Modal handleCloseModal={handleCloseModal}>
             <OrderDetails orderNum={orderNum} errorOrderNum={errorMessage} />

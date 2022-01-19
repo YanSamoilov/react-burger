@@ -1,8 +1,8 @@
 import done from 'images/done.svg';
-import PropTypes from 'prop-types';
+import { IOrderDetailsProps } from 'services/types/data';
 import OrderDetailsStyles from './OrderDetails.module.css';
 
-function OrderDetails({ orderNum, errorOrderNum }) {
+function OrderDetails({ orderNum, errorOrderNum }: IOrderDetailsProps) {
 
   return (
     <div className={`${OrderDetailsStyles.orderDetails} pt-30 pb-30`}>
@@ -24,11 +24,6 @@ function OrderDetails({ orderNum, errorOrderNum }) {
       </p>
     </div>
   )
-}
-
-OrderDetails.propTypes = {
-  orderNum: PropTypes.number,
-  errorOrderNum: PropTypes.string
 }
 
 export default OrderDetails

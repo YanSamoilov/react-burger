@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import AppHeader from 'components/Header/Header';
 import BurgerIngredients from 'components/BurgerIngredients/BurgerIngredients';
 import BurgerConstructor from 'components/BurgerConstructor/BurgerConstructor';
 import { getIngredients } from 'services/actions/burgerIngredients';
+import { useAppSelector, useAppDispatch } from 'services/types/hooks';
 import AppStyles from './App.module.css';
 
 function App() {
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { errorMessage, isLoading } = useSelector(state => state.feedIngredients)
+  const { errorMessage, isLoading } = useAppSelector(state => state.feedIngredients)
 
   //Получить список ингредиентов от сервера.
   useEffect(() => {

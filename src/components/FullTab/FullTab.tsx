@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
+import { IFullTabProps } from 'services/types/data';
 
-const FullTab = ({ bunHeadingRef, sauceHeadingRef, mainIngredientHeadingRef, value }) => {
+
+const FullTab = ({ bunHeadingRef, sauceHeadingRef, mainIngredientHeadingRef, value }: IFullTabProps) => {
 
   const [current, setCurrent] = useState(value);
 
@@ -12,31 +13,24 @@ const FullTab = ({ bunHeadingRef, sauceHeadingRef, mainIngredientHeadingRef, val
     <div style={{ display: 'flex' }}>
       <Tab value="one" active={current === 'one'} onClick={(value) => {
         setCurrent(value);
-        bunHeadingRef.current.scrollIntoView();
+        bunHeadingRef.current?.scrollIntoView();
       }} >
         Булки
       </Tab>
       <Tab value="two" active={current === 'two'} onClick={(value) => {
         setCurrent(value);
-        sauceHeadingRef.current.scrollIntoView();
+        sauceHeadingRef.current?.scrollIntoView();
       }}>
         Соусы
       </Tab>
       <Tab value="three" active={current === 'three'} onClick={(value) => {
         setCurrent(value);
-        mainIngredientHeadingRef.current.scrollIntoView();
+        mainIngredientHeadingRef.current?.scrollIntoView();
       }}>
         Начинки
       </Tab>
     </div>
   )
 }
-
-FullTab.propTypes = {
-  bunHeadingRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLHeadingElement) }),
-  sauceHeadingRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLHeadingElement) }),
-  mainIngredientHeadingRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLHeadingElement) }),
-  value: PropTypes.string.isRequired
-};
 
 export default FullTab
