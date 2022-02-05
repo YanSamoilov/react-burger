@@ -1,0 +1,31 @@
+.ingredientDetailsPage {
+  box-sizing: border-box;
+
+  padding-top: 52px;
+
+  margin: 120px auto 0;
+}
+
+.ingredientDetailsPage__name {
+  text-align: center;
+}
+
+.ingredientDetailsPage__image {
+  display: block;
+  margin: 0 auto;
+}
+
+.ingredientDetailsPage__list {
+  list-style-type: none;
+
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+}
+
+.ingredientDetailsPage__list-elem {
+  width: 120px;
+  text-align: center;
+  color: #8585AD;
+}

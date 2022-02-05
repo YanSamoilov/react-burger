@@ -1,4 +1,5 @@
 import { useRef, useMemo, useCallback, useState } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import FullTab from 'components/FullTab/FullTab';
 import Ingredient from 'components/Ingridient/Ingredient';
 import IngredientDetails from 'components/IngredientDetails/IngredientDetails';
@@ -11,6 +12,8 @@ import BurgerIngrStyles from './BurgerIngredients.module.css';
 function BurgerIngredients() {
 
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const history = useHistory();
 
   const bunHeadingRef = useRef<HTMLHeadingElement>(null);
   const sauceHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -45,12 +48,19 @@ function BurgerIngredients() {
       type: REMOVE_INGREDIENT_DETAILS,
       ingredientDetails: null,
     })
+    history.replace('/');
   };
 
   // Рендер списка ингредиента.
   const renderIngredient = ({ image, name, price, _id }: IIngredient) => (
     <li id={_id} onClickCapture={() => handleOpenIngredient(_id)} key={_id} className={`${BurgerIngrStyles['burger-ingredients__list-elem']}`}>
-      <Ingredient image={image} name={name} price={price} id={_id} />
+      <Link className={`${BurgerIngrStyles['burger-ingredients__link']}`} to={{
+        pathname: `/ingredients/${_id}`,
+        state: { background: location }
+      }}
+      >
+        <Ingredient image={image} name={name} price={price} id={_id} />
+      </Link>
     </li>
   );
 

@@ -27,6 +27,11 @@
   max-height: calc(100vh - 284px);
 }
 
+.burger-ingredients__link {
+  text-decoration: none;
+  color: #F2F2F3;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   background-color: #2F2F37;;

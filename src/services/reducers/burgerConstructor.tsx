@@ -2,7 +2,8 @@ import {
   ADD_INGREDIENT_INSIDE_CONSTRUCTOR,
   REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR,
   TOGGLE_BUN_INSIDE_CONSTRUCTOR,
-  CHANGE_INGREDIENT_POSITION
+  CHANGE_INGREDIENT_POSITION,
+  CLEAR_CONSTRUCTOR
 } from '../constants/burgerConstructor';
 import { TBurgerConstructorActions } from '../actions/burgerConstructor';
 import { IIngredient } from '../types/data';
@@ -43,6 +44,12 @@ export const burgerConstructor = (state = burgerConstructorInitialState, action:
             ...state,
             constructorElem: [...state.constructorElem].filter((item) => item.uid !== action.uid)
           }
+    }
+    case CLEAR_CONSTRUCTOR: {
+      return {
+        ...state,
+        constructorElem:[]
+      }
     }
     case TOGGLE_BUN_INSIDE_CONSTRUCTOR: {
       return {
