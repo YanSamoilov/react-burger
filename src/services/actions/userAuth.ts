@@ -261,6 +261,7 @@ export const getUserDataAction: AppThunk = (path) => {
     dispatch(getServerRequest())
     let refreshToken = getCookie('refreshToken');
     if (!refreshToken) {
+      dispatch(getServerRequestReset());
       return
     }
     getNewAccessToken(refreshToken)

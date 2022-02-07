@@ -49,6 +49,7 @@ function Profile() {
     setInputName(name);
     setPassword('');
   }
+
   if (isLoading) {
     return <Preloader />
   }
