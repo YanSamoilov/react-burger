@@ -1,9 +1,9 @@
 import { useDrag, useDrop } from 'react-dnd';
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR, CHANGE_INGREDIENT_POSITION } from '../../services/constants/burgerConstructor';
 import { IConstructorIngredientProps } from 'services/types/data';
 import { useAppDispatch } from 'services/types/hooks';
 import ConstructorIngredientStyles from './ConstructorIngredient.module.css';
+import { changeIngredientPosition, removeIngredientInsideConstructor } from 'services/actions/burgerConstructor';
 
 function ConstructorIngredient({ name, image, price, uid }: IConstructorIngredientProps) {
 
@@ -17,11 +17,10 @@ function ConstructorIngredient({ name, image, price, uid }: IConstructorIngredie
   const [, dropRef] = useDrop({
     accept: 'constructor-item',
     hover: (item: { uid: string }) => {
-      dispatch({
-        type: CHANGE_INGREDIENT_POSITION,
-        dragUid: item.uid,
-        hoverUid: uid
-      })
+      if (uid) {
+        dispatch(changeIngredientPosition(item.uid, uid)
+        )
+      }
     }
   });
 
@@ -32,10 +31,9 @@ function ConstructorIngredient({ name, image, price, uid }: IConstructorIngredie
 
   // Удалить ингредиент из конструктора.
   const handleDeleteIngredient = (uid: string | undefined) => {
-    dispatch({
-      type: REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR,
-      uid: uid
-    })
+    if (uid) {
+      dispatch(removeIngredientInsideConstructor(uid))
+    }
   };
 
   return (

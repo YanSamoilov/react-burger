@@ -42,11 +42,11 @@ function Login() {
   }
   return (
     <section className={`${LoginStyles.login}`}>
-      <form method="POST" name="login" noValidate className={`${LoginStyles.login__form}`}>
+      <form method="POST" name="login" noValidate className={`${LoginStyles.login__form}`} onSubmit={postLogin}>
         <h1 className={`${LoginStyles.login__heading} text text_type_main-medium`}>Вход</h1>
         <EmailInput onChange={onChangeEmail} value={email} name={'email'} size='default' />
         <PasswordInput onChange={onChangePassword} value={password} name={'password'} size='default' />
-        <Button disabled={email === '' && password === ''} type="primary" size="large" onClick={postLogin}>Войти</Button>
+        <Button disabled={email === '' && password === ''} type="primary" size="large">Войти</Button>
       </form>
       <p className='text text_type_main-default text_color_inactive mt-20 mb-4'>
         Вы - новый пользователь?

@@ -1,7 +1,7 @@
 import { Action, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { RootState } from 'services/types/hooks';
-import { postRegisterUser, postAuthUser, postLogOut, patchNewUserData, getNewAccessToken, getPermissionChangePassword, postNewPassword } from 'utils/api';
+import { postRegisterUser, postAuthUser, postLogOut, patchNewUserData, getNewAccessToken, getPermissionChangePassword, postNewPassword, getUserData } from 'utils/api';
 import { setTokenInCookie, getCookie, deleteCookie } from 'utils/cookie';
 import {
   GET_SERVER_REQUEST,
@@ -16,7 +16,8 @@ import {
   POST_EMAIL_FORGOT_PAGE_SUCCESS,
   POST_EMAIL_FORGOT_PAGE_FAILED,
   POST_NEW_PASSWORD_SUCCESS,
-  POST_NEW_PASSWORD_FAILED
+  POST_NEW_PASSWORD_FAILED,
+  GET_SERVER_REQUEST_RESET
 } from 'services/constants/userAuth';
 import {
   IServerRequest,
@@ -31,7 +32,8 @@ import {
   IPostEmailForgotPageSuccess,
   IPostEmailForgotPageFailed,
   IPostNewPasswordSuccess,
-  IPostNewPasswordFailed
+  IPostNewPasswordFailed,
+  IServerRequestReset
 } from 'services/types/data';
 
 export type TUserData =
@@ -48,81 +50,129 @@ export type TUserData =
   | IPostEmailForgotPageFailed
   | IPostNewPasswordSuccess
   | IPostNewPasswordFailed
+  | IServerRequestReset
 
 export type AppThunk<TReturn = void> = ActionCreator<
   ThunkAction<TReturn, Action, RootState, TUserData>
 >;
 
+export const getServerRequest = (): IServerRequest => ({
+  type: GET_SERVER_REQUEST
+});
+
+export const postNewPasswordSuccess = (): IPostNewPasswordSuccess => ({
+  type: POST_NEW_PASSWORD_SUCCESS
+});
+
+export const postNewPasswordFailed = (postNewpasswordErrorMessage: string): IPostNewPasswordFailed => ({
+  type: POST_NEW_PASSWORD_FAILED,
+  postNewpasswordErrorMessage
+});
+
+export const postEmailForgotPageSuccess = (): IPostEmailForgotPageSuccess => ({
+  type: POST_EMAIL_FORGOT_PAGE_SUCCESS
+});
+
+export const postEmailForgotPageFailed = (postEmailForgotPageErrorMessage: string): IPostEmailForgotPageFailed => ({
+  type: POST_EMAIL_FORGOT_PAGE_FAILED,
+  postEmailForgotPageErrorMessage
+});
+
+export const registerUserSuccess = (): IRegisterUserSuccess => ({
+  type: REGISTER_USER_SUCCESS,
+});
+
+export const registerUserFailed = (registerErrorMessage: string): IRegisterUserFailed => ({
+  type: REGISTER_USER_FAILED,
+  registerErrorMessage
+});
+
+export const changeUserSuccess = (email: string, name: string, changeUserResultMessage: string): IChangeUserSuccess => ({
+  type: CHANGE_USER_SUCCESS,
+  email,
+  name,
+  changeUserResultMessage
+});
+
+export const changeUserFailed = (changeUserErrorMessage: string): IChangeUserFailed => ({
+  type: CHANGE_USER_FAILED,
+  changeUserErrorMessage
+});
+
+export const authUserSuccess = (email: string, name: string): IAuthUserSuccess => ({
+  type: AUTH_USER_SUCCESS,
+  email,
+  name
+})
+
+export const authUserFailed = (authErrorMessage: string): IAuthUserFailed => ({
+  type: AUTH_USER_FAILED,
+  authErrorMessage
+});
+
+export const logOutSuccess = (): ILogOutSuccess => ({
+  type: LOGOUT_USER_SUCCESS,
+});
+
+export const logOutFailed = (logoutErrorMessage: string): ILogOutFailed => ({
+  type: LOGOUT_USER_FAILED,
+  logoutErrorMessage
+});
+
+export const getServerRequestReset = (): IServerRequestReset => ({
+  type: GET_SERVER_REQUEST_RESET
+})
+
+//Отправка нового пароля на сервер.
 export const postNewPasswordAction: AppThunk = (password: string, value: string) => {
   return function (dispatch) {
-    dispatch({
-      type: GET_SERVER_REQUEST
-    })
-
+    dispatch(getServerRequest());
     postNewPassword({ password: password, token: value })
       .then((res) => {
-        dispatch({
-          type: POST_NEW_PASSWORD_SUCCESS,
-        })
+        dispatch(postNewPasswordSuccess());
       })
       .catch((error) => {
-        dispatch({
-          type: POST_NEW_PASSWORD_FAILED,
-          postNewpasswordErrorMessage: error
-        })
+        dispatch(postNewPasswordFailed(error));
       })
   }
 }
 
+//Отправка почты для получения ключа для смены пароля.
 export const postEmailFromForgotPage: AppThunk = (email: string) => {
   return function (dispatch) {
-    dispatch({
-      type: GET_SERVER_REQUEST
-    })
+    dispatch(getServerRequest());
 
     getPermissionChangePassword(email)
       .then((res) => {
-        dispatch({
-          type: POST_EMAIL_FORGOT_PAGE_SUCCESS,
-        })
+        dispatch(postEmailForgotPageSuccess());
       })
       .catch((error) => {
-        dispatch({
-          type: POST_EMAIL_FORGOT_PAGE_FAILED,
-          postEmailForgotPageErrorMessage: error,
-        })
+        dispatch(postEmailForgotPageFailed(error));
       })
   }
 }
 
+//Отправка данных для регистрации.
 export const registerUser: AppThunk = (user: { email: string, password: string, name: string }) => {
   return function (dispatch) {
-    dispatch({
-      type: GET_SERVER_REQUEST
-    })
+    dispatch(getServerRequest());
 
     postRegisterUser(user)
       .then((res) => {
         setTokenInCookie(res, 'accessToken');
         setTokenInCookie(res, 'refreshToken');
-        dispatch({
-          type: REGISTER_USER_SUCCESS,
-        })
+        dispatch(registerUserSuccess());
       })
       .catch((error) => {
-        dispatch({
-          type: REGISTER_USER_FAILED,
-          registerErrorMessage: error,
-        })
+        dispatch(registerUserFailed(error))
       })
   }
 }
 
+//Отправка новых данных пользователя.
 export const patchNewUserDataAction: AppThunk = (user: { email: string, password: string, name: string }) => {
   return function (dispatch) {
-    dispatch({
-      type: GET_SERVER_REQUEST
-    })
+    dispatch(getServerRequest())
 
     let refreshToken = getCookie('refreshToken');
     let accessToken = getCookie('accessToken');
@@ -130,19 +180,15 @@ export const patchNewUserDataAction: AppThunk = (user: { email: string, password
     if (accessToken) {
       patchNewUserData(user, accessToken)
         .then((res) => {
-          dispatch({
-            type: CHANGE_USER_SUCCESS,
-            email: res.user.email,
-            name: res.user.name,
-            changeUserResultMessage: 'Данные успешно изменены'
-          })
+          dispatch(changeUserSuccess(
+            res.user.email,
+            res.user.name,
+            'Данные успешно изменены'
+          ));
         })
         .catch((error) => {
-          dispatch({
-            type: CHANGE_USER_FAILED,
-            changeUserErrorMessage: error,
-          })
-        })
+          dispatch(changeUserFailed(error))
+        });
     }
     else if (refreshToken) {
       getNewAccessToken(refreshToken)
@@ -153,18 +199,14 @@ export const patchNewUserDataAction: AppThunk = (user: { email: string, password
           if (accessToken) {
             patchNewUserData(user, accessToken)
               .then((res) => {
-                dispatch({
-                  type: CHANGE_USER_SUCCESS,
-                  email: res.user.email,
-                  name: res.user.name,
-                  changeUserResultMessage: 'Данные успешно изменены'
-                })
+                dispatch(changeUserSuccess(
+                  res.user.email,
+                  res.user.name,
+                  'Данные успешно изменены'
+                ));
               })
               .catch((error) => {
-                dispatch({
-                  type: CHANGE_USER_FAILED,
-                  changeUserErrorMessage: error,
-                })
+                dispatch(dispatch(changeUserFailed(error)));
               })
           }
         })
@@ -175,52 +217,72 @@ export const patchNewUserDataAction: AppThunk = (user: { email: string, password
   }
 }
 
+//Авторизация пользователя.
 export const authUser: AppThunk = (user: { email: string, password: string }) => {
   return function (dispatch) {
-    dispatch({
-      type: GET_SERVER_REQUEST
-    })
+    dispatch(getServerRequest())
 
     postAuthUser(user)
       .then((res) => {
         setTokenInCookie(res, 'accessToken');
         setTokenInCookie(res, 'refreshToken');
 
-        dispatch({
-          type: AUTH_USER_SUCCESS,
-          email: res.user.email,
-          name: res.user.name
-        })
+        dispatch(authUserSuccess(
+          res.user.email,
+          res.user.name
+        ));
       })
       .catch((error) => {
-        dispatch({
-          type: AUTH_USER_FAILED,
-          authErrorMessage: error,
-        })
+        dispatch(authUserFailed(error));
       })
   }
 }
 
+//Выход пользователя из приложения.
 export const logoutUser: AppThunk = () => {
   return function (dispatch) {
-    dispatch({
-      type: GET_SERVER_REQUEST
-    })
+    dispatch(getServerRequest())
 
     postLogOut()
       .then(() => {
         deleteCookie('accessToken');
         deleteCookie('accessToken');
-        dispatch({
-          type: LOGOUT_USER_SUCCESS,
-        })
+        dispatch(logOutSuccess());
       })
       .catch((error) => {
-        dispatch({
-          type: LOGOUT_USER_FAILED,
-          logoutErrorMessage: error,
-        })
+        dispatch(logOutFailed(error));
       })
   }
 }
 
+//Получение данных о пользователе.
+export const getUserDataAction: AppThunk = (path) => {
+  return function (dispatch) {
+    dispatch(getServerRequest())
+    let refreshToken = getCookie('refreshToken');
+    if (!refreshToken) {
+      return
+    }
+    getNewAccessToken(refreshToken)
+      .then((res) => {
+        setTokenInCookie(res, 'accessToken');
+        setTokenInCookie(res, 'refreshToken');
+        const accessToken = getCookie('accessToken');
+        if (accessToken) {
+          getUserData(accessToken)
+            .then((res) => {
+              dispatch(authUserSuccess(
+                res.user.email,
+                res.user.name
+              ));
+            })
+            .catch((error) => {
+              dispatch(authUserFailed(error))
+            })
+        }
+      })
+      .catch(() => {
+        dispatch(getServerRequestReset());
+      })
+  }
+}

@@ -4,9 +4,9 @@ import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-component
 import { useAppDispatch } from 'services/types/hooks';
 import { logoutUser, patchNewUserDataAction } from 'services/actions/userAuth';
 import { useAppSelector } from 'services/types/hooks';
-import { CLEAR_CONSTRUCTOR } from 'services/constants/burgerConstructor';
 import ProfileStyles from './Profile.module.css';
 import Preloader from 'components/Preloader/Preloader';
+import { clearConstructor } from 'services/actions/burgerConstructor';
 
 function Profile() {
 
@@ -33,14 +33,14 @@ function Profile() {
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    dispatch({
-      type: CLEAR_CONSTRUCTOR
-    })
+    dispatch(clearConstructor());
   }
 
   const handleSaveNewUserData = (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault();
-    dispatch(patchNewUserDataAction({ email: login, password: password, name: inputName }));
+    if (login && password && inputName) {
+      dispatch(patchNewUserDataAction({ email: login, password: password, name: inputName }));
+    }
   }
 
   const handleCancelChanges = (e: React.SyntheticEvent<Element, Event>) => {
@@ -77,7 +77,7 @@ function Profile() {
         <p className={`${ProfileStyles['profile__text']} text text_type_main-default text_color_inactive`}>В этом разделе вы можете изменить свои персональные данные</p>
         <p className={`${ProfileStyles['profile__result']} text text_type_main-default mt-5`}>{changeUserResultMessage}</p>
       </div>
-      <form method="POST" name="profile" className={`${ProfileStyles['profile__form']}`}>
+      <form method="POST" name="profile" className={`${ProfileStyles['profile__form']}`} onSubmit={handleSaveNewUserData}>
         <div className={`${ProfileStyles['form']}`}>
           <Input placeholder='Имя' icon='EditIcon' onChange={onChangeName} value={inputName} />
         </div>
@@ -88,7 +88,7 @@ function Profile() {
           <Input placeholder='Пароль' icon='EditIcon' onChange={onChangePassword} value={password} />
         </div>
         <div className={`${ProfileStyles['profile__buttons-container']}`}>
-          <Button onClick={handleSaveNewUserData}>Сохранить</Button>
+          <Button>Сохранить</Button>
           <button onClick={handleCancelChanges} className={`${ProfileStyles['profile__cansel']} text text_type_main-medium ml-20`}>Отмена</button>
         </div>
       </form>

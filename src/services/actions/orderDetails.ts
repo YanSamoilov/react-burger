@@ -37,23 +37,34 @@ export type AppThunk<TReturn = void> = ActionCreator<
   ThunkAction<TReturn, Action, RootState, TOrderDetailsActions>
 >;
 
+export const postOrderRequest = (): IPostOrderRequest => ({
+  type: POST_ORDER_REQUEST
+});
+
+export const postOrderSuccess = (orderNum: number): IPostOrderSuccess => ({
+  type: POST_ORDER_SUCCESS,
+  orderNum
+});
+
+export const postOrderFailed = (error: string): IPostOrderFailed => ({
+  type: POST_ORDER_FAILED,
+  error
+});
+
+export const handleCloseOrderModal = (): IHandleCloseOrderModal => ({
+  type: HANDLE_CLOSE_ORDER_MODAL
+});
+
+
 export const getOrderDetails: AppThunk = (idsArray: ReadonlyArray<string>) => {
   return function (dispatch) {
-    dispatch({
-      type: POST_ORDER_REQUEST,
-    })
+    dispatch(postOrderRequest())
     postOrder(idsArray)
       .then((res) => {
-        dispatch({
-          type: POST_ORDER_SUCCESS,
-          orderNum: res.order.number
-        })
+        dispatch(postOrderSuccess(res.order.number))
       })
       .catch((error) => {
-        dispatch({
-          type: POST_ORDER_FAILED,
-          error: error,
-        })
+        dispatch(postOrderFailed(error))
       })
   }
 }

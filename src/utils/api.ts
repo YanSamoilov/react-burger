@@ -1,4 +1,4 @@
-import { SERVER_URL, SERVER_AUTH_URL } from './constants';
+import { BASE_URL } from './constants';
 import { getCookie } from './cookie';
 
 const checkResponse = (res: Response) => {
@@ -9,12 +9,12 @@ const checkResponse = (res: Response) => {
 };
 
 export const getIngredientsData = async (): Promise<any> => {
-  const response = await fetch(`${SERVER_URL}ingredients`);
+  const response = await fetch(`${BASE_URL}ingredients`);
   return checkResponse(response);
 };
 
 export const postOrder = async (arrayId: ReadonlyArray<string>): Promise<any> => {
-  const response = await fetch(`${SERVER_URL}orders`, {
+  const response = await fetch(`${BASE_URL}orders`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -27,7 +27,7 @@ export const postOrder = async (arrayId: ReadonlyArray<string>): Promise<any> =>
 //Авторизация пользователя.
 export const postAuthUser = async (userData: { email: string, password: string }): Promise<any> => {
 
-  const response = await fetch(`${SERVER_AUTH_URL}login`, {
+  const response = await fetch(`${BASE_URL}auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData)
@@ -38,7 +38,7 @@ export const postAuthUser = async (userData: { email: string, password: string }
 //Регистрация пользователя.
 export const postRegisterUser = async (userData: { email: string, password: string, name: string }): Promise<any> => {
 
-  const response = await fetch(`${SERVER_AUTH_URL}register`, {
+  const response = await fetch(`${BASE_URL}auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData)
@@ -48,7 +48,7 @@ export const postRegisterUser = async (userData: { email: string, password: stri
 
 //Запрос для разрешения смены пароля, отправка почты.
 export const getPermissionChangePassword = async (email: string): Promise<any> => {
-  const response = await fetch(`${SERVER_URL}password-reset`, {
+  const response = await fetch(`${BASE_URL}password-reset`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -60,7 +60,7 @@ export const getPermissionChangePassword = async (email: string): Promise<any> =
 
 //Запрос на смену пароля. Отправка нового пароля.
 export const postNewPassword = async (newPassword: { password: string, token: string }): Promise<any> => {
-  const response = await fetch(`${SERVER_URL}password-reset/reset`, {
+  const response = await fetch(`${BASE_URL}password-reset/reset`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -74,7 +74,7 @@ export const postNewPassword = async (newPassword: { password: string, token: st
 //Запрос на выход из системы.
 export const postLogOut = async () => {
   const refreshToken = getCookie('refreshToken');
-  const response = await fetch(`${SERVER_AUTH_URL}logout`, {
+  const response = await fetch(`${BASE_URL}auth/logout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -87,7 +87,7 @@ export const postLogOut = async () => {
 //Запрос на обновление accessToken.
 export const getNewAccessToken = async (refreshToken: string) => {
 
-  const response = await fetch(`${SERVER_AUTH_URL}token`, {
+  const response = await fetch(`${BASE_URL}auth/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -99,11 +99,11 @@ export const getNewAccessToken = async (refreshToken: string) => {
 
 //Запрос данных о пользователе.
 export const getUserData = async (accessToken: string) => {
-  const response = await fetch(`${SERVER_AUTH_URL}user`, {
+  const response = await fetch(`${BASE_URL}auth/user`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      authorization: accessToken
+      authorization: "Bearer " + accessToken,
     }
   })
   return checkResponse(response);
@@ -111,7 +111,7 @@ export const getUserData = async (accessToken: string) => {
 
 export const patchNewUserData = async (userData: { email: string, password: string, name: string }, accessToken: string): Promise<any> => {
 
-  const response = await fetch(`${SERVER_AUTH_URL}user`, {
+  const response = await fetch(`${BASE_URL}auth/user`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

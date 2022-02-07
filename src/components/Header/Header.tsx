@@ -4,7 +4,7 @@ import {
   ListIcon,
   ProfileIcon
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import stylesHeader from "./Header.module.css";
 
 function AppHeader() {
@@ -53,9 +53,9 @@ function AppHeader() {
           </li>
         </ul>
       </nav>
-      <a href="#" className={`${stylesHeader.header__logo}`}>
+      <Link to={'/'} className={`${stylesHeader.header__logo}`}>
         <Logo />
-      </a>
+      </Link>
     </header>
   )
 }

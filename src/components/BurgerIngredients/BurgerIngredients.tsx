@@ -4,10 +4,10 @@ import FullTab from 'components/FullTab/FullTab';
 import Ingredient from 'components/Ingridient/Ingredient';
 import IngredientDetails from 'components/IngredientDetails/IngredientDetails';
 import Modal from 'components/Modal/Modal';
-import { ADD_INGREDIENT_DETAILS, REMOVE_INGREDIENT_DETAILS } from '../../services/constants/ingredientDetails';
 import { IIngredient } from '../../services/types/data';
 import { useAppSelector, useAppDispatch } from 'services/types/hooks';
 import BurgerIngrStyles from './BurgerIngredients.module.css';
+import { addIngredientDetails, removeIngredientDetails } from 'services/actions/ingredientDetails';
 
 function BurgerIngredients() {
 
@@ -36,18 +36,15 @@ function BurgerIngredients() {
 
   // Открыть модальное окно с данными ингредиента.
   const handleOpenIngredient = (id: string) => {
-    dispatch({
-      type: ADD_INGREDIENT_DETAILS,
-      ingredientDetails: findSelectedIngredient(id),
-    })
+    const selectedIngredient = findSelectedIngredient(id)
+    if (selectedIngredient) {
+      dispatch(addIngredientDetails(selectedIngredient))
+    }
   };
 
   // Закрыть модальное окно.
   const handleCloseIngredient = () => {
-    dispatch({
-      type: REMOVE_INGREDIENT_DETAILS,
-      ingredientDetails: null,
-    })
+    dispatch(removeIngredientDetails(null))
     history.replace('/');
   };
 

@@ -7,12 +7,11 @@ import Preloader from 'components/Preloader/Preloader';
 import Modal from 'components/Modal/Modal';
 import OrderDetails from 'components/OrderDetails/OrderDetails';
 import ConstructorIngredient from 'components/ConstructorIngredient/ConstructorIngredient';
-import { HANDLE_CLOSE_ORDER_MODAL } from '../../services/constants/orderDetails';
-import { ADD_INGREDIENT_INSIDE_CONSTRUCTOR, TOGGLE_BUN_INSIDE_CONSTRUCTOR, CLEAR_CONSTRUCTOR } from '../../services/constants/burgerConstructor';
-import { getOrderDetails } from '../../services/actions/orderDetails';
+import { getOrderDetails, handleCloseOrderModal } from '../../services/actions/orderDetails';
 import { IIngredient, IDroppedIngredientId } from '../../services/types/data';
 import { useAppSelector, useAppDispatch } from 'services/types/hooks';
 import BurgConstructorStyles from './BurgerConstructor.module.css';
+import { addIngredientInsideConstructor, clearConstructor, toggleBunInsideConstructor } from 'services/actions/burgerConstructor';
 
 function BurgerConstructor() {
 
@@ -51,19 +50,10 @@ function BurgerConstructor() {
     // Если есть булка и перетаскиваемый объект тоже булка, то заменить в конструкторе, иначе добавить ингредиент.
     if (dropedIngredient !== undefined) {
       if (bun && dropedIngredient.type === 'bun') {
-        dispatch({
-          type: TOGGLE_BUN_INSIDE_CONSTRUCTOR,
-          ingredient: dropedIngredient
-        })
+        dispatch(toggleBunInsideConstructor(dropedIngredient))
       }
       else {
-        dispatch({
-          type: ADD_INGREDIENT_INSIDE_CONSTRUCTOR,
-          ingredient: {
-            ...dropedIngredient,
-            uid: uuidv4()
-          }
-        })
+        dispatch(addIngredientInsideConstructor({...dropedIngredient, uid: uuidv4()}))
       }
     }
   };
@@ -106,18 +96,14 @@ function BurgerConstructor() {
       const totalIds: Array<string> = constructorItems.map((el) => el._id);
       if (totalIds.length) {
         dispatch(getOrderDetails(totalIds));
-        dispatch({
-          type: CLEAR_CONSTRUCTOR
-        })
+        dispatch(clearConstructor());
       }
     }
   };
 
   //Закрыть модальное окно.
   const handleCloseModal = () => {
-    dispatch({
-      type: HANDLE_CLOSE_ORDER_MODAL
-    })
+    dispatch(handleCloseOrderModal())
   };
 
   const constructorBorder = `${BurgConstructorStyles['burger-constructor']} ${isHover ? BurgConstructorStyles.onHover : ""} pt-25 pl-4`;

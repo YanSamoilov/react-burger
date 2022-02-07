@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Input, EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
@@ -30,22 +29,22 @@ function Register() {
 
   const handlePostRegister = (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault();
-    if(value && email && password) {
-      dispatch(registerUser({name: value, email: email, password: password}));
+    if (value && email && password) {
+      dispatch(registerUser({ name: value, email: email, password: password }));
     }
   }
 
   if (isLoading) {
     return <Preloader />
   }
-  return(
+  return (
     <section className={`${RegisterStyles.register}`}>
-      <form action="POST" className={`${RegisterStyles.register__form}`}>
+      <form action="POST" className={`${RegisterStyles.register__form}`} onSubmit={handlePostRegister}>
         <h1 className={`${RegisterStyles.register__heading} text text_type_main-medium`}>Регистрация</h1>
-        <Input  placeholder={'Имя'} name={'name'} value={value} onChange={onChangeName}/>
+        <Input placeholder={'Имя'} name={'name'} value={value} onChange={onChangeName} />
         <EmailInput onChange={onChangeEmail} value={email} name={'email'} size='default' />
         <PasswordInput onChange={onChangePassword} value={password} name={'password'} size='default' />
-        <Button disabled={value === '' && email === '' && password === ''} type="primary" size="large" onClick={handlePostRegister}>Зарегистрироваться</Button>
+        <Button disabled={value === '' && email === '' && password === ''} type="primary" size="large">Зарегистрироваться</Button>
       </form>
       <p className='text text_type_main-default text_color_inactive mt-20'>
         Уже зарегистрированы?

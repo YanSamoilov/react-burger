@@ -9,7 +9,7 @@ import { postEmailFromForgotPage } from 'services/actions/userAuth';
 
 function ForgotPassword() {
 
-  let history = useHistory();
+  const history = useHistory();
   const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState('');
@@ -36,10 +36,10 @@ function ForgotPassword() {
   else {
     return (
       <section className={`${ForgotPasswordStyles['forgot-password']}`}>
-        <form action="POST" className={`${ForgotPasswordStyles['forgot-password__form']}`}>
+        <form action="POST" className={`${ForgotPasswordStyles['forgot-password__form']}`} onSubmit={handleGetPermissionToChangePassword}>
           <h1 className={`${ForgotPasswordStyles['forgot-password__heading']} text text_type_main-medium`}>Восстановление пароля</h1>
           <Input value={email} onChange={onChangeEmail} name={'email'} size='default' placeholder='Укажите e-mail' />
-          <Button disabled={email === ''} type="primary" size="large" onClick={handleGetPermissionToChangePassword}>Восстановить</Button>
+          <Button disabled={email === ''} type="primary" size="large">Восстановить</Button>
         </form>
         <p className='text text_type_main-default text_color_inactive mt-20'>
           Вспомнили пароль?

@@ -11,7 +11,8 @@ import {
   POST_NEW_PASSWORD_FAILED,
   POST_NEW_PASSWORD_SUCCESS,
   REGISTER_USER_FAILED,
-  REGISTER_USER_SUCCESS
+  REGISTER_USER_SUCCESS,
+  GET_SERVER_REQUEST_RESET
 } from "services/constants/userAuth";
 
 export interface IIngredient {
@@ -140,4 +141,8 @@ export interface IPostNewPasswordSuccess {
 export interface IPostNewPasswordFailed {
   postNewpasswordErrorMessage: string | null;
   readonly type: typeof POST_NEW_PASSWORD_FAILED;
+}
+
+export interface IServerRequestReset {
+  readonly type: typeof GET_SERVER_REQUEST_RESET;
 }

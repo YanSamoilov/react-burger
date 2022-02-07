@@ -38,3 +38,29 @@ export type TBurgerConstructorActions =
   | IToggleBunInsideConstructor
   | IChangeIngredientPosition
   | IClearConstructor
+
+
+export const toggleBunInsideConstructor = (ingredient: IIngredient): IToggleBunInsideConstructor => ({
+  type: TOGGLE_BUN_INSIDE_CONSTRUCTOR,
+  ingredient
+});
+
+export const addIngredientInsideConstructor = (ingredient: any): IAddIngredientInsideConstructor => ({
+  type: ADD_INGREDIENT_INSIDE_CONSTRUCTOR,
+  ingredient
+});
+
+export const clearConstructor = (): IClearConstructor => ({
+  type: CLEAR_CONSTRUCTOR
+});
+
+export const changeIngredientPosition = (dragUid: string, hoverUid: string): IChangeIngredientPosition => ({
+  type: CHANGE_INGREDIENT_POSITION,
+  dragUid,
+  hoverUid
+});
+
+export const removeIngredientInsideConstructor = (uid: string): IRemoveIngredientInsideConstructor => ({
+  type: REMOVE_INGREDIENT_INSIDE_CONSTRUCTOR,
+  uid
+});

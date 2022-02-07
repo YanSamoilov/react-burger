@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import Login from '../../pages/Login/Login';
 import Register from '../../pages/Register/Register';
 import ForgotPassword from 'pages/ForgotPassword/ForgotPassword';
@@ -16,20 +16,26 @@ import { useAppSelector, useAppDispatch } from 'services/types/hooks';
 import ProtectedRoute from 'components/ProtectedRoute/ProtectedRoute';
 import AppStyles from './App.module.css';
 import IngredientDetailsPage from 'pages/IngredientDetailsPage/IngredientDetailsPage';
+import { getUserDataAction } from 'services/actions/userAuth';
 
 
 function App() {
 
   const dispatch = useAppDispatch();
   const location = useLocation<any>();
+  const history = useHistory();
 
+  const historyAction = history.action === 'PUSH';
   const { errorMessage, isLoading } = useAppSelector(state => state.feedIngredients);
-  let background = location.state && location.state.background;
+
+  const background = historyAction && location.state && location.state.background;
 
   //Получить список ингредиентов от сервера.
   useEffect(() => {
-    dispatch(getIngredients())
+    dispatch(getIngredients());
+    dispatch(getUserDataAction());
   }, [dispatch]);
+
 
   if (errorMessage) {
     return (<p className={`${AppStyles.main__error} text text_type_main-default`}>Произошла ошибка: {errorMessage}</p>)
@@ -41,7 +47,7 @@ function App() {
     <>
       <AppHeader />
       <main className={`${AppStyles.main} pr-5 pl-5`}>
-        <Switch location={background}>
+        <Switch location={background || location}>
           <Route path='/' exact={true}>
             <>
               <DndProvider backend={HTML5Backend}>

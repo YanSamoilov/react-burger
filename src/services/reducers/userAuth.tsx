@@ -11,7 +11,8 @@ import {
   POST_EMAIL_FORGOT_PAGE_SUCCESS,
   POST_EMAIL_FORGOT_PAGE_FAILED,
   POST_NEW_PASSWORD_SUCCESS,
-  POST_NEW_PASSWORD_FAILED
+  POST_NEW_PASSWORD_FAILED,
+  GET_SERVER_REQUEST_RESET
 } from "services/constants/userAuth";
 import { TUserData } from "services/actions/userAuth";
 
@@ -162,6 +163,12 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
         ...state,
         isLoading: false,
         postNewPasswordError: action.postNewpasswordErrorMessage,
+      }
+    }
+    case GET_SERVER_REQUEST_RESET: {
+      return {
+        ...state,
+        isLoading: false,
       }
     }
     default: {
