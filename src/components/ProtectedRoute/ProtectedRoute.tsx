@@ -4,17 +4,19 @@ import { useAppSelector } from 'services/types/hooks';
 interface IProtectedRoute {
   children: any,
   path: string,
-  redirectPath: string
+  redirectPath: string,
+  exact: boolean
 }
 
-function ProtectedRoute({ children, redirectPath }: IProtectedRoute) {
+function ProtectedRoute({ children, redirectPath, exact }: IProtectedRoute) {
 
   const { isAuth } = useAppSelector(state => state.authUserReducer);
 
   return (
     <Route
-      render={({location}) => (
-        isAuth ? (children) : (<Redirect to={{pathname: redirectPath, state: { from: location }}} />)
+      exact={exact}
+      render={({ location }) => (
+        isAuth ? (children) : (<Redirect to={{ pathname: redirectPath, state: { from: location } }} />)
       )
       }
     />

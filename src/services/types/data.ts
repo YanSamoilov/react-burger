@@ -15,6 +15,31 @@ import {
   GET_SERVER_REQUEST_RESET
 } from "services/constants/userAuth";
 
+export interface IAllOrdersData {
+  allOrders: ReadonlyArray<IFeedOrder>;
+}
+
+export interface IOrderData {
+  orderData: IFeedOrder;
+}
+
+export interface IWSMessageFeed {
+  orders: ReadonlyArray<IFeedOrder>;
+  success: boolean;
+  total: number;
+  totalToday: number;
+}
+
+export interface IFeedOrder {
+  createdAt: string;
+  ingredients: ReadonlyArray<string>;
+  name: string;
+  number: number;
+  status: string;
+  updatedAt: string;
+  _id: string;
+}
+
 export interface IIngredient {
   _id: string;
   name: string;

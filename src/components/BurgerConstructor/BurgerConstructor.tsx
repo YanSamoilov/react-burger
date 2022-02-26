@@ -10,8 +10,8 @@ import ConstructorIngredient from 'components/ConstructorIngredient/ConstructorI
 import { getOrderDetails, handleCloseOrderModal } from '../../services/actions/orderDetails';
 import { IIngredient, IDroppedIngredientId } from '../../services/types/data';
 import { useAppSelector, useAppDispatch } from 'services/types/hooks';
-import BurgConstructorStyles from './BurgerConstructor.module.css';
 import { addIngredientInsideConstructor, clearConstructor, toggleBunInsideConstructor } from 'services/actions/burgerConstructor';
+import BurgConstructorStyles from './BurgerConstructor.module.css';
 
 function BurgerConstructor() {
 

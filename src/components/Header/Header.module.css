@@ -35,21 +35,17 @@
   display: flex;
   align-items: center;
   text-decoration: none;
+  transition: all .2s linear;
 }
 
 .header__nav-link_active {
-  border-radius: 40px;
-  cursor: pointer;
-  box-sizing: border-box;
-  align-items: center;
-  display: inline-block;
-  min-height: 56px;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
   color: #F2F2F3;
 }
 
 .header__nav-link_right {
   margin-left: auto;
+}
+
+.header__nav-link:hover {
+  opacity: .7;
 }

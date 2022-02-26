@@ -126,17 +126,6 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
         isLoading: false,
       }
     }
-    case CHANGE_USER_SUCCESS: {
-      return {
-        ...state,
-        user: {
-          email: action.email,
-          name: action.name
-        },
-        isLoading: false,
-        isAuth: true,
-      }
-    }
     case POST_EMAIL_FORGOT_PAGE_SUCCESS: {
       return {
         ...state,

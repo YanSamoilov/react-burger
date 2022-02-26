@@ -13,10 +13,13 @@ export const getIngredientsData = async (): Promise<any> => {
   return checkResponse(response);
 };
 
-export const postOrder = async (arrayId: ReadonlyArray<string>): Promise<any> => {
+export const postOrder = async (arrayId: ReadonlyArray<string>, accessToken: any): Promise<any> => {
   const response = await fetch(`${BASE_URL}orders`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: "Bearer " + accessToken
+    },
     body: JSON.stringify({
       ingredients: arrayId
     })

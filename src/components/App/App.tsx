@@ -14,9 +14,12 @@ import NotFound404 from 'pages/NotFound404/NotFound404';
 import { getIngredients } from 'services/actions/burgerIngredients';
 import { useAppSelector, useAppDispatch } from 'services/types/hooks';
 import ProtectedRoute from 'components/ProtectedRoute/ProtectedRoute';
-import AppStyles from './App.module.css';
 import IngredientDetailsPage from 'pages/IngredientDetailsPage/IngredientDetailsPage';
 import { getUserDataAction } from 'services/actions/userAuth';
+import Feed from 'pages/Feed/Feed';
+import OrderDescriptionPage from 'pages/OrderDescriptionPage/OrderDescriptionPage';
+import ProfileOrders from 'components/ProfileOrders/ProfileOrders';
+import AppStyles from './App.module.css';
 
 
 function App() {
@@ -68,11 +71,23 @@ function App() {
           <Route path='/login'>
             <Login />
           </Route>
-          <ProtectedRoute path='/profile' redirectPath='/login'>
+          <Route path='/feed' exact>
+            <Feed />
+          </Route>
+          <ProtectedRoute path='/profile' redirectPath='/login' exact={true}>
             <Profile />
+          </ProtectedRoute>
+          <ProtectedRoute path='/profile/orders' redirectPath='/login' exact={true}>
+            <ProfileOrders />
+          </ProtectedRoute>
+          <ProtectedRoute path='/profile/orders/:id' redirectPath='/login' exact={true}>
+            <OrderDescriptionPage />
           </ProtectedRoute>
           <Route path='/ingredients/:id' exact>
             <IngredientDetailsPage />
+          </Route>
+          <Route path='/feed/:id' exact>
+            <OrderDescriptionPage />
           </Route>
           <Route>
             <NotFound404 />
