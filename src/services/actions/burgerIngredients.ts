@@ -29,24 +29,30 @@ export type TBurgerIngredientsActions =
 
 export type RootState = ReturnType<typeof store.getState>;
 
+export const getFeedRequest = (): IGetFeedRequest => ({
+  type: GET_FEED_REQUEST
+});
+
+export const getFeedSuccess = (feed: IIngredient[]): IGetFeedSuccess => ({
+  type: GET_FEED_SUCCESS,
+  feed
+});
+
+export const getFeedFailed = (error: string): IGetFeedFailed => ({
+  type: GET_FEED_FAILED,
+  error
+});
+
 // Получить массив ингредиентов от сервера.
-export const getIngredients:AppThunk = () => {
+export const getIngredients: AppThunk = () => {
   return function (dispatch) {
-    dispatch({
-      type: GET_FEED_REQUEST
-    });
+    dispatch(getFeedRequest());
     getIngredientsData()
       .then((res) => {
-        dispatch({
-          type: GET_FEED_SUCCESS,
-          feed: res.data
-        })
+        dispatch(getFeedSuccess(res.data))
       })
       .catch((error) => {
-        dispatch({
-          type: GET_FEED_FAILED,
-          error: error,
-        })
+        dispatch(getFeedFailed(error))
       })
   }
 }

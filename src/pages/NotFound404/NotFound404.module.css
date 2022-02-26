@@ -1,0 +1,16 @@
+.notFound {
+  margin: 0 auto;
+}
+
+.notFound__link {
+  color: white;
+  transition: all .3s;
+}
+
+.notFound__link:hover {
+  opacity: .7;
+}
+
+.notFound__text {
+  text-align: center;
+}

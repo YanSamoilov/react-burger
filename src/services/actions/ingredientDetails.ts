@@ -8,6 +8,17 @@ export interface IAddIngredientDetails {
 
 export interface IRemoveIngredientDetails {
   readonly type: typeof REMOVE_INGREDIENT_DETAILS;
+  ingredientDetails: null
 }
+
+export const addIngredientDetails = (ingredientDetails: IIngredient): IAddIngredientDetails => ({
+  type: ADD_INGREDIENT_DETAILS,
+  ingredientDetails
+});
+
+export const removeIngredientDetails = (ingredientDetails: null): IRemoveIngredientDetails => ({
+  type: REMOVE_INGREDIENT_DETAILS,
+  ingredientDetails
+});
 
 export type TIngredientDetails = IAddIngredientDetails | IRemoveIngredientDetails;

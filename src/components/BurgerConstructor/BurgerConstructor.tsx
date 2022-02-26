@@ -1,27 +1,29 @@
 import { useMemo } from 'react';
 import { useDrop } from 'react-dnd';
 import { v4 as uuidv4 } from 'uuid';
+import { useHistory } from 'react-router-dom';
 import { ConstructorElement, CurrencyIcon, Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import Preloader from 'components/Preloader/Preloader';
 import Modal from 'components/Modal/Modal';
 import OrderDetails from 'components/OrderDetails/OrderDetails';
 import ConstructorIngredient from 'components/ConstructorIngredient/ConstructorIngredient';
-import { HANDLE_CLOSE_ORDER_MODAL } from '../../services/constants/orderDetails';
-import { ADD_INGREDIENT_INSIDE_CONSTRUCTOR, TOGGLE_BUN_INSIDE_CONSTRUCTOR } from '../../services/constants/burgerConstructor';
-import { getOrderDetails } from '../../services/actions/orderDetails';
+import { getOrderDetails, handleCloseOrderModal } from '../../services/actions/orderDetails';
 import { IIngredient, IDroppedIngredientId } from '../../services/types/data';
 import { useAppSelector, useAppDispatch } from 'services/types/hooks';
 import BurgConstructorStyles from './BurgerConstructor.module.css';
-import ModalOverlay from 'components/ModalOverlay/ModalOverlay';
+import { addIngredientInsideConstructor, clearConstructor, toggleBunInsideConstructor } from 'services/actions/burgerConstructor';
 
 function BurgerConstructor() {
 
   const dispatch = useAppDispatch();
+  const history = useHistory();
 
   const errorMessage = useAppSelector(state => state.orderDetails.errorMessage);
   const allIngredientsData = useAppSelector(state => state.feedIngredients.ingredientsData);
   const orderNum = useAppSelector(state => state.orderDetails.orderNum);
   const isLoading = useAppSelector(state => state.orderDetails.isLoading);
   const constructorItems = useAppSelector(state => state.burgerConstructor.constructorElem);
+  const { isAuth } = useAppSelector(state => state.authUserReducer);
 
   const [{ isHover }, dropTarget] = useDrop({
     accept: "ingredient",
@@ -48,19 +50,10 @@ function BurgerConstructor() {
     // Если есть булка и перетаскиваемый объект тоже булка, то заменить в конструкторе, иначе добавить ингредиент.
     if (dropedIngredient !== undefined) {
       if (bun && dropedIngredient.type === 'bun') {
-        dispatch({
-          type: TOGGLE_BUN_INSIDE_CONSTRUCTOR,
-          ingredient: dropedIngredient
-        })
+        dispatch(toggleBunInsideConstructor(dropedIngredient))
       }
       else {
-        dispatch({
-          type: ADD_INGREDIENT_INSIDE_CONSTRUCTOR,
-          ingredient: {
-            ...dropedIngredient,
-            uid: uuidv4()
-          }
-        })
+        dispatch(addIngredientInsideConstructor({...dropedIngredient, uid: uuidv4()}))
       }
     }
   };
@@ -96,17 +89,21 @@ function BurgerConstructor() {
 
   //Получить номер заказа.
   const getOrder = () => {
-    const totalIds: Array<string> = constructorItems.map((el) => el._id);
-    if (totalIds.length) {
-      dispatch(getOrderDetails(totalIds));
+    if (!isAuth) {
+      history.replace('/login');
+    }
+    else {
+      const totalIds: Array<string> = constructorItems.map((el) => el._id);
+      if (totalIds.length) {
+        dispatch(getOrderDetails(totalIds));
+        dispatch(clearConstructor());
+      }
     }
   };
 
   //Закрыть модальное окно.
   const handleCloseModal = () => {
-    dispatch({
-      type: HANDLE_CLOSE_ORDER_MODAL
-    })
+    dispatch(handleCloseOrderModal())
   };
 
   const constructorBorder = `${BurgConstructorStyles['burger-constructor']} ${isHover ? BurgConstructorStyles.onHover : ""} pt-25 pl-4`;
@@ -121,19 +118,22 @@ function BurgerConstructor() {
           </ul>
           {bun && createBunIngredient(bun, 'bottom', 'низ')}
         </ul>
+        {totalPrice === 0 && (
+          <p className={`${BurgConstructorStyles['burger-constructor__text']} text text_type_main-default`}>
+            Для заказа, пожалуйста, перенесите любой ингредиент на эту сторону.
+          </p>
+        )}
         <div className={`${BurgConstructorStyles['burger-constructor__total-container']} mt-10`}>
           <div className={`${BurgConstructorStyles['burger-constructor__total-price-container']} mr-10`}>
             <p className={`${BurgConstructorStyles['burger-constructor__total-price']} text text_type_digits-medium`}>{totalPrice}</p>
             <CurrencyIcon type="primary" />
           </div>
-          <Button type="primary" size="large" onClick={getOrder}>
+          <Button disabled={!(totalPrice > 0)} type="primary" size="large" onClick={getOrder}>
             Оформить заказ
           </Button>
         </div>
         {isLoading && (
-          <ModalOverlay>
-            <div className={`${BurgConstructorStyles['burger-constructor__order-preloader']}`}></div>
-          </ModalOverlay>
+          <Preloader />
         )}
         {(orderNum || errorMessage) && (
           <Modal handleCloseModal={handleCloseModal}>

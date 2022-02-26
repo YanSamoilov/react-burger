@@ -1,16 +1,19 @@
 import { useRef, useMemo, useCallback, useState } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import FullTab from 'components/FullTab/FullTab';
 import Ingredient from 'components/Ingridient/Ingredient';
 import IngredientDetails from 'components/IngredientDetails/IngredientDetails';
 import Modal from 'components/Modal/Modal';
-import { ADD_INGREDIENT_DETAILS, REMOVE_INGREDIENT_DETAILS } from '../../services/constants/ingredientDetails';
 import { IIngredient } from '../../services/types/data';
 import { useAppSelector, useAppDispatch } from 'services/types/hooks';
 import BurgerIngrStyles from './BurgerIngredients.module.css';
+import { addIngredientDetails, removeIngredientDetails } from 'services/actions/ingredientDetails';
 
 function BurgerIngredients() {
 
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const history = useHistory();
 
   const bunHeadingRef = useRef<HTMLHeadingElement>(null);
   const sauceHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -33,24 +36,28 @@ function BurgerIngredients() {
 
   // Открыть модальное окно с данными ингредиента.
   const handleOpenIngredient = (id: string) => {
-    dispatch({
-      type: ADD_INGREDIENT_DETAILS,
-      ingredientDetails: findSelectedIngredient(id),
-    })
+    const selectedIngredient = findSelectedIngredient(id)
+    if (selectedIngredient) {
+      dispatch(addIngredientDetails(selectedIngredient))
+    }
   };
 
   // Закрыть модальное окно.
   const handleCloseIngredient = () => {
-    dispatch({
-      type: REMOVE_INGREDIENT_DETAILS,
-      ingredientDetails: null,
-    })
+    dispatch(removeIngredientDetails(null))
+    history.replace('/');
   };
 
   // Рендер списка ингредиента.
   const renderIngredient = ({ image, name, price, _id }: IIngredient) => (
     <li id={_id} onClickCapture={() => handleOpenIngredient(_id)} key={_id} className={`${BurgerIngrStyles['burger-ingredients__list-elem']}`}>
-      <Ingredient image={image} name={name} price={price} id={_id} />
+      <Link className={`${BurgerIngrStyles['burger-ingredients__link']}`} to={{
+        pathname: `/ingredients/${_id}`,
+        state: { background: location }
+      }}
+      >
+        <Ingredient image={image} name={name} price={price} id={_id} />
+      </Link>
     </li>
   );
 
