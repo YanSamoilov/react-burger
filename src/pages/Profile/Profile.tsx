@@ -12,7 +12,7 @@ function Profile() {
   const dispatch = useAppDispatch();
 
   const { email, name } = useAppSelector(state => state.authUserReducer.user);
-  const { isLoading } = useAppSelector(state => state.authUserReducer);
+  const { isLoadingAuth } = useAppSelector(state => state.authUserReducer);
 
   const [password, setPassword] = useState('');
   const [login, setLogin] = useState(email);
@@ -44,7 +44,7 @@ function Profile() {
     setPassword('');
   }
 
-  if (isLoading) {
+  if (isLoadingAuth) {
     return <Preloader />
   }
   return (

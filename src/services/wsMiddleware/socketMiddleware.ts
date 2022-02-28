@@ -8,21 +8,23 @@ import {
 import { AppDispatch, RootState } from "services/types/hooks";
 import { getCookie } from "utils/cookie";
 
-
-export const socketMiddleware = (wsUrl: string): Middleware => {
+  export const socketMiddleware = (wsUrl: string, actionList: any, authType: string): Middleware => {
   return ((store: MiddlewareAPI<AppDispatch, RootState>) => {
     let socket: WebSocket | null = null;
 
     return next => (action: any) => {
       const { dispatch } = store;
       const { type } = action;
-
-      if (type === 'WS_CONNECTION_START') {
-        socket = new WebSocket(`${wsUrl}/all`);
+      if(authType === 'withoutAuth') {
+        if (type === actionList.wsConnectionStart.type) {
+          socket = new WebSocket(wsUrl);
+        }
       }
-      if (type === 'WS_CONNECTION_START_WITH_AUTH') {
-        const accessToken = getCookie('accessToken');
-        socket = new WebSocket(`${wsUrl}?token=${accessToken}`);
+      else if (authType === 'withAuth') {
+        if (type === actionList.wsConnectionStartWithAuth.type) {
+          const accessToken = getCookie('accessToken');
+          socket = new WebSocket(`${wsUrl}?token=${accessToken}`);
+        }
       }
       if (socket) {
         socket.onopen = event => {
@@ -36,10 +38,10 @@ export const socketMiddleware = (wsUrl: string): Middleware => {
           dispatch(wsGetMessage(JSON.parse(data)));
         };
         socket.onclose = event => {
-          dispatch(wsConnectionClosed())
+          dispatch(wsConnectionClosed());
         };
 
-        if (type === 'WS_CONNECTION_START_CLOSED') {
+        if (type === actionList.wsConnectionStartClosed.type) {
           socket.close(1000, 'reason');
         }
       }

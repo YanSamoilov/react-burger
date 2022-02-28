@@ -30,7 +30,6 @@ function App() {
 
   const historyAction = history.action === 'PUSH';
   const { errorMessage, isLoading } = useAppSelector(state => state.feedIngredients);
-
   const background = historyAction && location.state && location.state.background;
 
   //Получить список ингредиентов от сервера.

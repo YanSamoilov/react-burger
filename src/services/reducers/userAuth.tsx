@@ -22,7 +22,7 @@ export interface IUserAuthState {
     name: string,
   },
   isAuth: boolean,
-  isLoading: boolean,
+  isLoadingAuth: boolean,
   registerErrorMessage: string | null,
   authErrorMessage: string | null,
   logoutErrorMessage: string | null,
@@ -39,7 +39,7 @@ export const userAuthState: IUserAuthState = {
     name: ''
   },
   isAuth: false,
-  isLoading: false,
+  isLoadingAuth: false,
   registerErrorMessage: null,
   authErrorMessage: null,
   logoutErrorMessage: null,
@@ -54,13 +54,13 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
     case GET_SERVER_REQUEST: {
       return {
         ...state,
-        isLoading: true,
+        isLoadingAuth: true,
       }
     }
     case REGISTER_USER_SUCCESS: {
       return {
         ...state,
-        isLoading: false,
+        isLoadingAuth: false,
         isAuth: true,
       }
     }
@@ -68,7 +68,7 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
       return {
         ...state,
         registerErrorMessage: `Произошла ошибка регистрации: ${action.registerErrorMessage}. Обратитесь к администрации.`,
-        isLoading: false,
+        isLoadingAuth: false,
       }
     }
     case AUTH_USER_SUCCESS: {
@@ -78,7 +78,7 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
           email: action.email,
           name: action.name
         },
-        isLoading: false,
+        isLoadingAuth: false,
         isAuth: true,
         authErrorMessage: null,
       }
@@ -87,7 +87,7 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
       return {
         ...state,
         authErrorMessage: `Произошла ошибка: ${action.authErrorMessage}. Проверьте введенные данные или попробуйте авторизоваться позже.`,
-        isLoading: false,
+        isLoadingAuth: false,
       }
     }
     case CHANGE_USER_SUCCESS: {
@@ -97,7 +97,7 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
           email: action.email,
           name: action.name
         },
-        isLoading: false,
+        isLoadingAuth: false,
         changeUserResultMessage: action.changeUserResultMessage,
       }
     }
@@ -105,7 +105,7 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
       return {
         ...state,
         changeUserResultMessage: `Произошла ошибка: ${action.changeUserErrorMessage}. Повторите попытку позже.`,
-        isLoading: false,
+        isLoadingAuth: false,
       }
     }
     case LOGOUT_USER_SUCCESS: {
@@ -115,7 +115,7 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
           email: '',
           name: ''
         },
-        isLoading: false,
+        isLoadingAuth: false,
         isAuth: false,
       }
     }
@@ -123,41 +123,41 @@ export const authUserReducer = (state = userAuthState, action: TUserData): IUser
       return {
         ...state,
         logoutErrorMessage: `Произошла ошибка: ${action.logoutErrorMessage}.`,
-        isLoading: false,
+        isLoadingAuth: false,
       }
     }
     case POST_EMAIL_FORGOT_PAGE_SUCCESS: {
       return {
         ...state,
         isEmail: 'pushToResetPage',
-        isLoading: false
+        isLoadingAuth: false
       }
     }
     case POST_EMAIL_FORGOT_PAGE_FAILED: {
       return {
         ...state,
         postEmailForgotPageErrorMessage: action.postEmailForgotPageErrorMessage,
-        isLoading: false
+        isLoadingAuth: false
       }
     }
     case POST_NEW_PASSWORD_SUCCESS: {
       return {
         ...state,
-        isLoading: false,
+        isLoadingAuth: false,
         isEmail: 'pushToLoginPage'
       }
     }
     case POST_NEW_PASSWORD_FAILED: {
       return {
         ...state,
-        isLoading: false,
+        isLoadingAuth: false,
         postNewPasswordError: action.postNewpasswordErrorMessage,
       }
     }
     case GET_SERVER_REQUEST_RESET: {
       return {
         ...state,
-        isLoading: false,
+        isLoadingAuth: false,
       }
     }
     default: {

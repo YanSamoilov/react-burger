@@ -246,7 +246,7 @@ export const logoutUser: AppThunk = () => {
     postLogOut()
       .then(() => {
         deleteCookie('accessToken');
-        deleteCookie('accessToken');
+        deleteCookie('refreshToken');
         dispatch(logOutSuccess());
       })
       .catch((error) => {
@@ -257,33 +257,56 @@ export const logoutUser: AppThunk = () => {
 
 //Получение данных о пользователе.
 export const getUserDataAction: AppThunk = (path) => {
-  return function (dispatch) {
-    dispatch(getServerRequest())
-    let refreshToken = getCookie('refreshToken');
-    if (!refreshToken) {
-      dispatch(getServerRequestReset());
-      return
-    }
-    getNewAccessToken(refreshToken)
-      .then((res) => {
-        setTokenInCookie(res, 'accessToken');
-        setTokenInCookie(res, 'refreshToken');
-        const accessToken = getCookie('accessToken');
-        if (accessToken) {
-          getUserData(accessToken)
-            .then((res) => {
-              dispatch(authUserSuccess(
-                res.user.email,
-                res.user.name
-              ));
-            })
-            .catch((error) => {
-              dispatch(authUserFailed(error))
-            })
-        }
-      })
-      .catch(() => {
+  const accessTokenCurrent = getCookie('accessToken');
+  if (!accessTokenCurrent) {
+    return function (dispatch) {
+      dispatch(getServerRequest())
+      let refreshToken = getCookie('refreshToken');
+      if (!refreshToken) {
         dispatch(getServerRequestReset());
-      })
+        return
+      }
+      getNewAccessToken(refreshToken)
+        .then((res) => {
+          console.log(res);
+
+          setTokenInCookie(res, 'accessToken');
+          setTokenInCookie(res, 'refreshToken');
+          const accessToken = getCookie('accessToken');
+
+          if (accessToken) {
+            getUserData(accessToken)
+              .then((res) => {
+                dispatch(authUserSuccess(
+                  res.user.email,
+                  res.user.name
+                ));
+              })
+              .catch((error) => {
+                dispatch(authUserFailed(error))
+              })
+          }
+        })
+        .catch(() => {
+          dispatch(getServerRequestReset());
+        })
+    }
+  }
+  else {
+    return function (dispatch) {
+      if (accessTokenCurrent) {
+        getUserData(accessTokenCurrent)
+          .then((res) => {
+            dispatch(authUserSuccess(
+              res.user.email,
+              res.user.name
+            ));
+          })
+          .catch((error) => {
+            dispatch(authUserFailed(error))
+          })
+      }
+    }
+
   }
 }

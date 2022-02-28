@@ -11,7 +11,7 @@ function ResetPassword() {
 
   const history = useHistory();
   const dispatch = useAppDispatch();
-  const { isLoading, postNewPasswordError, isEmail } = useAppSelector(state => state.authUserReducer);
+  const { isLoadingAuth, postNewPasswordError, isEmail } = useAppSelector(state => state.authUserReducer);
 
 
   const [password, setPassword] = useState('');
@@ -37,7 +37,7 @@ function ResetPassword() {
     }
   }
 
-  if (isLoading) {
+  if (isLoadingAuth) {
     return (<Preloader />)
   }
   return (

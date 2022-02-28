@@ -89,12 +89,11 @@ export const postLogOut = async () => {
 
 //Запрос на обновление accessToken.
 export const getNewAccessToken = async (refreshToken: string) => {
-
   const response = await fetch(`${BASE_URL}auth/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      "token": refreshToken
+      token: refreshToken
     })
   })
   return checkResponse(response);

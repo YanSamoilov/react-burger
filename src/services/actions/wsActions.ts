@@ -76,3 +76,19 @@ export const wsConnectionClosed = (): IWSConnectionClosed => ({
 export const wsConnectionStartClosed = (): IWSStartConnectionClosed => ({
   type: WS_CONNECTION_START_CLOSED
 });
+
+export const actionListWithoutAuth = {
+  wsConnectionStart: wsConnectionStart(),
+  wsConnectionSuccess: wsConnectionSuccess(),
+  wsConnectionError: wsConnectionError(),
+  wsConnectionClosed: wsConnectionClosed(),
+  wsConnectionStartClosed: wsConnectionStartClosed()
+}
+
+export const actionListWithAuth = {
+  wsConnectionStartWithAuth: wsConnectionStartWithAuth(),
+  wsConnectionSuccess: wsConnectionSuccess(),
+  wsConnectionError: wsConnectionError(),
+  wsConnectionClosed: wsConnectionClosed(),
+  wsConnectionStartClosed: wsConnectionStartClosed()
+}
