@@ -1,14 +1,8 @@
 import { Middleware, MiddlewareAPI } from "redux";
-import {
-  wsConnectionClosed,
-  wsConnectionError,
-  wsConnectionSuccess,
-  wsGetMessage
-} from "services/actions/wsActions";
 import { AppDispatch, RootState } from "services/types/hooks";
 import { getCookie } from "utils/cookie";
 
-  export const socketMiddleware = (wsUrl: string, actionList: any, authType: string): Middleware => {
+  export const socketMiddleware = (wsUrl: string, actionsList: any, authType: string): Middleware => {
   return ((store: MiddlewareAPI<AppDispatch, RootState>) => {
     let socket: WebSocket | null = null;
 
@@ -16,32 +10,32 @@ import { getCookie } from "utils/cookie";
       const { dispatch } = store;
       const { type } = action;
       if(authType === 'withoutAuth') {
-        if (type === actionList.wsConnectionStart.type) {
+        if (type === actionsList.wsConnectionStart.type) {
           socket = new WebSocket(wsUrl);
         }
       }
       else if (authType === 'withAuth') {
-        if (type === actionList.wsConnectionStartWithAuth.type) {
+        if (type === actionsList.wsConnectionStartWithAuth.type) {
           const accessToken = getCookie('accessToken');
           socket = new WebSocket(`${wsUrl}?token=${accessToken}`);
         }
       }
       if (socket) {
         socket.onopen = event => {
-          if (socket?.readyState === 1) dispatch(wsConnectionSuccess());
+          if (socket?.readyState === 1) dispatch(actionsList.wsConnectionSuccess());
         };
         socket.onerror = event => {
-          dispatch(wsConnectionError());
+          dispatch(actionsList.wsConnectionError());
         };
         socket.onmessage = event => {
           const { data } = event;
-          dispatch(wsGetMessage(JSON.parse(data)));
+          dispatch(actionsList.wsGetMessage(JSON.parse(data)));
         };
         socket.onclose = event => {
-          dispatch(wsConnectionClosed());
+          dispatch(actionsList.wsConnectionClosed());
         };
 
-        if (type === actionList.wsConnectionStartClosed.type) {
+        if (type === actionsList.wsConnectionStartClosed.type) {
           socket.close(1000, 'reason');
         }
       }

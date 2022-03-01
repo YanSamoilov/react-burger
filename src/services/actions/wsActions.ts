@@ -79,16 +79,18 @@ export const wsConnectionStartClosed = (): IWSStartConnectionClosed => ({
 
 export const actionListWithoutAuth = {
   wsConnectionStart: wsConnectionStart(),
-  wsConnectionSuccess: wsConnectionSuccess(),
-  wsConnectionError: wsConnectionError(),
-  wsConnectionClosed: wsConnectionClosed(),
-  wsConnectionStartClosed: wsConnectionStartClosed()
+  wsConnectionSuccess: wsConnectionSuccess,
+  wsConnectionError: wsConnectionError,
+  wsConnectionClosed: wsConnectionClosed,
+  wsConnectionStartClosed: wsConnectionStartClosed(),
+  wsGetMessage: wsGetMessage
 }
 
 export const actionListWithAuth = {
   wsConnectionStartWithAuth: wsConnectionStartWithAuth(),
-  wsConnectionSuccess: wsConnectionSuccess(),
-  wsConnectionError: wsConnectionError(),
-  wsConnectionClosed: wsConnectionClosed(),
-  wsConnectionStartClosed: wsConnectionStartClosed()
+  wsConnectionSuccess: wsConnectionSuccess,
+  wsConnectionError: wsConnectionError,
+  wsConnectionClosed: wsConnectionClosed,
+  wsConnectionStartClosed: wsConnectionStartClosed(),
+  wsGetMessage: wsGetMessage
 }
