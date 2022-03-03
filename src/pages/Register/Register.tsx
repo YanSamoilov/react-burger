@@ -9,7 +9,7 @@ import Preloader from 'components/Preloader/Preloader';
 function Register() {
 
   const dispatch = useAppDispatch();
-  const { isLoading, registerErrorMessage } = useAppSelector(state => state.authUserReducer);
+  const { isLoadingAuth, registerErrorMessage } = useAppSelector(state => state.authUserReducer);
 
   const [value, setValue] = useState('');
   const [email, setEmail] = useState('');
@@ -34,7 +34,7 @@ function Register() {
     }
   }
 
-  if (isLoading) {
+  if (isLoadingAuth) {
     return <Preloader />
   }
   return (

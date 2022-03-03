@@ -13,10 +13,13 @@ export const getIngredientsData = async (): Promise<any> => {
   return checkResponse(response);
 };
 
-export const postOrder = async (arrayId: ReadonlyArray<string>): Promise<any> => {
+export const postOrder = async (arrayId: ReadonlyArray<string>, accessToken: any): Promise<any> => {
   const response = await fetch(`${BASE_URL}orders`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: "Bearer " + accessToken
+    },
     body: JSON.stringify({
       ingredients: arrayId
     })
@@ -86,12 +89,11 @@ export const postLogOut = async () => {
 
 //Запрос на обновление accessToken.
 export const getNewAccessToken = async (refreshToken: string) => {
-
   const response = await fetch(`${BASE_URL}auth/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      "token": refreshToken
+      token: refreshToken
     })
   })
   return checkResponse(response);

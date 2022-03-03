@@ -1,12 +1,16 @@
 import { Action, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
+import { IFeedOrder } from 'services/types/data';
 import { RootState } from 'services/types/hooks';
 import { postOrder } from 'utils/api';
+import { getCookie } from 'utils/cookie';
 import {
   POST_ORDER_SUCCESS,
   POST_ORDER_FAILED,
   HANDLE_CLOSE_ORDER_MODAL,
-  POST_ORDER_REQUEST
+  POST_ORDER_REQUEST,
+  ADD_CURRENT_ORDER_DETAILS,
+  REMOVE_CURRENT_ORDER_DETAILS
 } from '../constants/orderDetails';
 
 export interface IPostOrderRequest {
@@ -27,11 +31,22 @@ export interface IPostOrderFailed {
   error: string | null;
 }
 
+export interface IAddCurrentOrderDetails {
+  readonly type: typeof ADD_CURRENT_ORDER_DETAILS;
+  payload: IFeedOrder
+}
+
+export interface IRemoveCurrentOrderDetails {
+  readonly type: typeof REMOVE_CURRENT_ORDER_DETAILS;
+}
+
 export type TOrderDetailsActions =
   | IPostOrderRequest
   | IPostOrderSuccess
   | IPostOrderFailed
-  | IHandleCloseOrderModal;
+  | IHandleCloseOrderModal
+  | IAddCurrentOrderDetails
+  | IRemoveCurrentOrderDetails;
 
 export type AppThunk<TReturn = void> = ActionCreator<
   ThunkAction<TReturn, Action, RootState, TOrderDetailsActions>
@@ -55,11 +70,20 @@ export const handleCloseOrderModal = (): IHandleCloseOrderModal => ({
   type: HANDLE_CLOSE_ORDER_MODAL
 });
 
+export const addCurrentOrderDetails = (currentOrder: IFeedOrder): IAddCurrentOrderDetails => ({
+  type: ADD_CURRENT_ORDER_DETAILS,
+  payload: currentOrder
+})
+
+export const removeCurrentOrderDetails = (): IRemoveCurrentOrderDetails => ({
+  type: REMOVE_CURRENT_ORDER_DETAILS,
+})
 
 export const getOrderDetails: AppThunk = (idsArray: ReadonlyArray<string>) => {
+  const accessToken = getCookie('accessToken');
   return function (dispatch) {
     dispatch(postOrderRequest())
-    postOrder(idsArray)
+    postOrder(idsArray, accessToken)
       .then((res) => {
         dispatch(postOrderSuccess(res.order.number))
       })

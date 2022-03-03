@@ -2,8 +2,8 @@ import { useDrag, useDrop } from 'react-dnd';
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IConstructorIngredientProps } from 'services/types/data';
 import { useAppDispatch } from 'services/types/hooks';
-import ConstructorIngredientStyles from './ConstructorIngredient.module.css';
 import { changeIngredientPosition, removeIngredientInsideConstructor } from 'services/actions/burgerConstructor';
+import ConstructorIngredientStyles from './ConstructorIngredient.module.css';
 
 function ConstructorIngredient({ name, image, price, uid }: IConstructorIngredientProps) {
 

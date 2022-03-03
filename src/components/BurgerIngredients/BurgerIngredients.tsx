@@ -6,8 +6,8 @@ import IngredientDetails from 'components/IngredientDetails/IngredientDetails';
 import Modal from 'components/Modal/Modal';
 import { IIngredient } from '../../services/types/data';
 import { useAppSelector, useAppDispatch } from 'services/types/hooks';
-import BurgerIngrStyles from './BurgerIngredients.module.css';
 import { addIngredientDetails, removeIngredientDetails } from 'services/actions/ingredientDetails';
+import BurgerIngrStyles from './BurgerIngredients.module.css';
 
 function BurgerIngredients() {
 
@@ -50,7 +50,7 @@ function BurgerIngredients() {
 
   // Рендер списка ингредиента.
   const renderIngredient = ({ image, name, price, _id }: IIngredient) => (
-    <li id={_id} onClickCapture={() => handleOpenIngredient(_id)} key={_id} className={`${BurgerIngrStyles['burger-ingredients__list-elem']}`}>
+    <li onClickCapture={() => handleOpenIngredient(_id)} key={_id} className={`${BurgerIngrStyles['burger-ingredients__list-elem']}`}>
       <Link className={`${BurgerIngrStyles['burger-ingredients__link']}`} to={{
         pathname: `/ingredients/${_id}`,
         state: { background: location }

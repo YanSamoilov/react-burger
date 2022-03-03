@@ -13,7 +13,7 @@ function ForgotPassword() {
   const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState('');
-  const { isLoading, postEmailForgotPageErrorMessage, isEmail } = useAppSelector(state => state.authUserReducer);
+  const { isLoadingAuth, postEmailForgotPageErrorMessage, isEmail } = useAppSelector(state => state.authUserReducer);
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
@@ -30,7 +30,7 @@ function ForgotPassword() {
     if(isEmail === 'pushToResetPage') history.push("/reset-password");
   }, [isEmail, history]);
 
-  if (isLoading) {
+  if (isLoadingAuth) {
     return (<Preloader />)
   }
   else {

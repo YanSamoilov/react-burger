@@ -1,0 +1,17 @@
+.profile {
+  margin-top: 40px;
+
+  display: flex;
+}
+
+.profile__nav-container {
+  margin-top: 80px;
+}
+
+.profile__main-error {
+  text-align: center;
+
+  width: 100%;
+
+  margin-top: 25%;
+}

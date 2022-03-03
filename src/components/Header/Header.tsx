@@ -31,8 +31,7 @@ function AppHeader() {
           </li>
           <li>
             <NavLink
-              exact
-              to={'/404'}
+              to={'/feed'}
               className={`${stylesHeader['header__nav-link']} text text_type_main-default text_color_inactive pl-5 pr-5`}
               activeClassName={`${stylesHeader['header__nav-link_active']} pl-5 pr-5`}
             >
@@ -42,7 +41,6 @@ function AppHeader() {
           </li>
           <li className={`${stylesHeader['header__nav-link_right']}`}>
             <NavLink
-              exact
               to={'/profile'}
               className={`${stylesHeader['header__nav-link']} text text_type_main-default text_color_inactive pl-5 pr-5`}
               activeClassName={`${stylesHeader['header__nav-link_active']} pl-5 pr-5`}

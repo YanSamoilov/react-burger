@@ -1,5 +1,4 @@
 import { IServerReply } from "services/types/data";
-import { getNewAccessToken } from "./api";
 
 export function getCookie(name: string) {
   const matches = document.cookie.match(
@@ -53,18 +52,3 @@ export function setTokenInCookie(resource: IServerReply, tokenName: string) {
       setCookie(tokenName, authToken);
   }
 }
-
-
-// export async function updateAccessToken(refreshToken: string) {
-
-//   await getNewAccessToken(refreshToken)
-//     .then((res) => {
-
-//       setTokenInCookie(res, 'accessToken');
-//       setTokenInCookie(res, 'refreshToken');
-//       return res.accessToken.split('Bearer ')[1]
-//     })
-//     .catch((error) => {
-//       return error.message
-//     })
-// }

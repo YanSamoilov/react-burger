@@ -5,13 +5,12 @@ import { useAppDispatch } from 'services/types/hooks';
 import { authUser } from 'services/actions/userAuth';
 import { useAppSelector } from 'services/types/hooks';
 import LoginStyles from './Login.module.css';
-import Preloader from 'components/Preloader/Preloader';
 
 function Login() {
 
   const dispatch = useAppDispatch();
   const location = useLocation<any>();
-  const { isAuth, isLoading, authErrorMessage } = useAppSelector(state => state.authUserReducer);
+  const { isAuth, authErrorMessage } = useAppSelector(state => state.authUserReducer);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,18 +26,15 @@ function Login() {
   const postLogin = (e: React.SyntheticEvent<Element, Event>) => {
     e.preventDefault();
 
-    if(email && password) {
-      dispatch(authUser({email: email, password: password}));
+    if (email && password) {
+      dispatch(authUser({ email: email, password: password }));
     }
   };
 
-  if(isAuth) {
+  if (isAuth) {
     return (
-      <Redirect to={ location.state?.from || '/' } />
+      <Redirect to={location.state?.from || '/'} />
     )
-  }
-  if(isLoading) {
-    return <Preloader />
   }
   return (
     <section className={`${LoginStyles.login}`}>
