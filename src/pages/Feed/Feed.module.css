@@ -30,8 +30,13 @@
 }
 
 .feed__numbers-done {
+  margin-bottom: 8px;
   max-width: 136px;
   color: #00CCCC;
+}
+
+.feed__numbers-done:nth-child(5n) {
+  margin-bottom: 0;
 }
 
 .feed__status-container {

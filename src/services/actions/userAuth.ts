@@ -268,7 +268,6 @@ export const getUserDataAction: AppThunk = (path) => {
       }
       getNewAccessToken(refreshToken)
         .then((res) => {
-          console.log(res);
 
           setTokenInCookie(res, 'accessToken');
           setTokenInCookie(res, 'refreshToken');

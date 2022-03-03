@@ -12,7 +12,7 @@ function AppHeader() {
   const { pathname } = useLocation();
   const typeProfileIcon = pathname === '/profile' ? 'primary' : 'secondary';
   const typeBurgerIcon = pathname === '/' ? 'primary' : 'secondary';
-  const typeListIcon = pathname === '/404' ? 'primary' : 'secondary';
+  const typeListIcon = pathname === '/feed' ? 'primary' : 'secondary';
 
   return (
     <header className={`${stylesHeader.header} pt-4 pb-4`}>
@@ -31,6 +31,7 @@ function AppHeader() {
           </li>
           <li>
             <NavLink
+              exact
               to={'/feed'}
               className={`${stylesHeader['header__nav-link']} text text_type_main-default text_color_inactive pl-5 pr-5`}
               activeClassName={`${stylesHeader['header__nav-link_active']} pl-5 pr-5`}

@@ -45,7 +45,7 @@ function Feed() {
               <h2 className="text text_type_main-medium mt-15 mb-6">Готовы:</h2>
               <ul className={`${stylesFeed['feed__numbers-list']}`}>
                 {allOrdersDoneStatus.map((order: IFeedOrder) => (
-                  <li key={order._id} className={`${stylesFeed['feed__numbers-done']} text text_type_digits-default mb-2`}>{order.number}</li>
+                  <li key={order._id} className={`${stylesFeed['feed__numbers-done']} text text_type_digits-default`}>{order.number}</li>
                 ))}
               </ul>
             </div>
@@ -58,10 +58,10 @@ function Feed() {
               </ul>
             </div>
           </div>
-          <h2 className="text text_type_main-medium mb-6">Выполнено за все время:</h2>
-          <p className={`${stylesFeed['feed__total-digits']} text text_type_digits-large mb-15`}>{total}</p>
-          <h2 className="text text_type_main-medium mb-6">Выполнено за сегодня:</h2>
-          <p className={`${stylesFeed['feed__total-digits']} text text_type_digits-large`}>{totalToday}</p>
+          <h2 className="text text_type_main-medium">Выполнено за все время:</h2>
+          <p className={`${stylesFeed['feed__total-digits']} text text_type_digits-medium mb-15`}>{total}</p>
+          <h2 className="text text_type_main-medium">Выполнено за сегодня:</h2>
+          <p className={`${stylesFeed['feed__total-digits']} text text_type_digits-medium`}>{totalToday}</p>
         </div>
         {currentOrderDetails && (
           <Modal handleCloseModal={handleCloseOrderDetails}>
