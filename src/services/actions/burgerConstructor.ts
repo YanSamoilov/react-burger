@@ -45,7 +45,7 @@ export const toggleBunInsideConstructor = (ingredient: IIngredient): IToggleBunI
   ingredient
 });
 
-export const addIngredientInsideConstructor = (ingredient: any): IAddIngredientInsideConstructor => ({
+export const addIngredientInsideConstructor = (ingredient: IIngredient): IAddIngredientInsideConstructor => ({
   type: ADD_INGREDIENT_INSIDE_CONSTRUCTOR,
   ingredient
 });

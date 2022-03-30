@@ -1,12 +1,12 @@
 import Preloader from "components/Preloader/Preloader";
-import { IIngredient } from "services/types/data";
+import { IFeedOrder, IIngredient } from "services/types/data";
 import { useAppSelector } from "services/types/hooks";
 import { v4 as uuidv4 } from 'uuid';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import stylesOrderFeed from "./OrderFeed.module.css";
 import { convertDate } from "utils/dateOrderFeedPage";
 
-export default function OrderFeed({ orderData }: any) {
+export default function OrderFeed({ orderData }: {orderData: IFeedOrder}) {
 
   const { ingredientsData } = useAppSelector(state => state.feedIngredients);
   let zIndex = 7;
@@ -18,35 +18,40 @@ export default function OrderFeed({ orderData }: any) {
   });
 
   //Создать массив из ингредиентов в заказе из промежуточного, исключая undefined.
-  const fullDataOrderIngredient = fullDataOrderIngredientPreliminary.filter((el: IIngredient) => el !== undefined);
+  const fullDataOrderIngredient = fullDataOrderIngredientPreliminary.filter((el: IIngredient | undefined) => el !== undefined);
   //Рассчитать стоимость заказа.
   let price = 0;
   for(let ingredient of fullDataOrderIngredient) {
-    ingredient.type === 'bun' ? price += ingredient.price * 2 : price += ingredient.price
+    if(ingredient)
+      ingredient.type === 'bun' ? price += ingredient.price * 2 : price += ingredient.price
   }
 
 
   //Добавить картинку ингредиента в карточку заказа.
-  const createImage = (ingredient: IIngredient, count: number) => {
+  const createImage = (ingredient: IIngredient | undefined, count: number) => {
     zIndex--;
-    return (
-      <li key={uuidv4()} className={`${stylesOrderFeed['orderFeed__image-list-elem']}`} style={{ zIndex: zIndex }}>
-        <img src={ingredient.image} alt={ingredient.name} className={`${stylesOrderFeed['orderFeed__image']}`} />
-        {count !== 0 && <span className={`${stylesOrderFeed['orderFeed__count']} text text_type_main-default`}>+{count}</span>}
-      </li>
-    )
+    if(ingredient) {
+      return (
+        <li key={uuidv4()} className={`${stylesOrderFeed['orderFeed__image-list-elem']}`} style={{ zIndex: zIndex }}>
+          <img src={ingredient.image} alt={ingredient.name} className={`${stylesOrderFeed['orderFeed__image']}`} />
+          {count !== 0 && <span className={`${stylesOrderFeed['orderFeed__count']} text text_type_main-default`}>+{count}</span>}
+        </li>
+      )
+    }
   }
 
   //Рендер картинок ингредиентов карточки заказа.
-  const renderImagesIngredients = (fullDataOrderIngredient: IIngredient[]) => {
+  const renderImagesIngredients = (fullDataOrderIngredient: (IIngredient | undefined)[]) => {
     const arr = [];
-    for (let ind = 0; ind <= fullDataOrderIngredient.length - 1; ind++) {
-      if (ind === 5) {
-        arr.push(createImage(fullDataOrderIngredient[ind], fullDataOrderIngredient.length - 5));
-        return arr
-      }
-      else {
-        arr.push(createImage(fullDataOrderIngredient[ind], 0));
+    if(fullDataOrderIngredient) {
+      for (let ind = 0; ind <= fullDataOrderIngredient.length - 1; ind++) {
+        if (ind === 5) {
+          arr.push(createImage(fullDataOrderIngredient[ind], fullDataOrderIngredient.length - 5));
+          return arr
+        }
+        else {
+          arr.push(createImage(fullDataOrderIngredient[ind], 0));
+        }
       }
     }
     return arr

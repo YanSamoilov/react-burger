@@ -1,3 +1,8 @@
+import { Action, ActionCreator } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { TBurgerIngredientsActions } from 'services/actions/burgerIngredients';
+import { TOrderDetailsActions } from 'services/actions/orderDetails';
+import { TUserData } from 'services/actions/userAuth';
 import {
   AUTH_USER_FAILED,
   AUTH_USER_SUCCESS,
@@ -14,6 +19,13 @@ import {
   REGISTER_USER_SUCCESS,
   GET_SERVER_REQUEST_RESET
 } from "services/constants/userAuth";
+import { RootState } from './hooks';
+
+type TAllActions = TOrderDetailsActions | TUserData | TBurgerIngredientsActions;
+
+export type AppThunk<TReturn = void> = ActionCreator<
+  ThunkAction<TReturn, Action, RootState, TAllActions>
+>;
 
 export interface IAllOrdersData {
   allOrders: ReadonlyArray<IFeedOrder>;

@@ -1,7 +1,4 @@
-import { Action, ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-import { IFeedOrder } from 'services/types/data';
-import { RootState } from 'services/types/hooks';
+import { AppThunk, IFeedOrder } from 'services/types/data';
 import { postOrder } from 'utils/api';
 import { getCookie } from 'utils/cookie';
 import {
@@ -47,10 +44,6 @@ export type TOrderDetailsActions =
   | IHandleCloseOrderModal
   | IAddCurrentOrderDetails
   | IRemoveCurrentOrderDetails;
-
-export type AppThunk<TReturn = void> = ActionCreator<
-  ThunkAction<TReturn, Action, RootState, TOrderDetailsActions>
->;
 
 export const postOrderRequest = (): IPostOrderRequest => ({
   type: POST_ORDER_REQUEST
