@@ -1,14 +1,11 @@
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { useAppSelector } from 'services/types/hooks';
 
-interface IProtectedRoute {
-  children: any,
-  path: string,
+type TProtectedRoute = {
   redirectPath: string,
-  exact: boolean
-}
+} & RouteProps
 
-function ProtectedRoute({ children, redirectPath, exact }: IProtectedRoute) {
+function ProtectedRoute({ children, redirectPath, exact }: TProtectedRoute) {
 
   const { isAuth } = useAppSelector(state => state.authUserReducer);
 

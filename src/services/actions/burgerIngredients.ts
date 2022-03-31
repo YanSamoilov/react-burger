@@ -1,12 +1,11 @@
 import { getIngredientsData } from 'utils/api';
-import { store } from 'utils/store';
 import { IIngredient } from '../types/data';
 import {
   GET_FEED_REQUEST,
   GET_FEED_SUCCESS,
   GET_FEED_FAILED
 } from '../constants/burgerIngredients';
-import { AppThunk } from 'services/types/hooks';
+import { AppThunk } from 'services/types/data';
 
 export interface IGetFeedRequest {
   readonly type: typeof GET_FEED_REQUEST;
@@ -26,8 +25,6 @@ export type TBurgerIngredientsActions =
   | IGetFeedRequest
   | IGetFeedSuccess
   | IGetFeedFailed;
-
-export type RootState = ReturnType<typeof store.getState>;
 
 export const getFeedRequest = (): IGetFeedRequest => ({
   type: GET_FEED_REQUEST

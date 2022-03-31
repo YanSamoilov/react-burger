@@ -5,12 +5,16 @@ import { convertDate } from "utils/dateOrderFeedPage";
 import { IIngredient, IOrderData } from "services/types/data";
 import styles from "./OrderDescription.module.css";
 
+interface IIdIngredientsList {
+  [key: string]: number
+}
+
 function OrderDescription({ orderData }: IOrderData) {
 
   const { ingredientsData } = useAppSelector(state => state.feedIngredients);
 
   //Создать объект с полями id ингредиентов и значениями их количества в заказе.
-  const ingredientsFromOrder = orderData.ingredients.reduce((acc: any, n: any) => (acc[n] = (acc[n] || 0) + 1, acc), {});
+  const ingredientsFromOrder = orderData.ingredients.reduce((acc: IIdIngredientsList, n: string) => (acc[n] = (acc[n] || 0) + 1, acc), {});
   let totalPrice = 0;
 
   //Создать карточку ингредиента в списке.
@@ -31,7 +35,7 @@ function OrderDescription({ orderData }: IOrderData) {
   }
 
   //Рендер всех карточек ингредиентов из заказа.
-  const renderIngredientElement = (ingredientsFromOrder: any) => {
+  const renderIngredientElement = (ingredientsFromOrder: IIdIngredientsList) => {
     const allIngredientsCards = [];
     //Перебор всех ингредиентов в заказе, их поиск и добавление в массив для последующей отрисовки.
     for (let ingredient in ingredientsFromOrder) {

@@ -1,5 +1,6 @@
 import Preloader from "components/Preloader/Preloader";
 import { useParams } from "react-router-dom";
+import { IIngredient } from "services/types/data";
 import { useAppSelector } from "services/types/hooks";
 import IngredientPageStyles from './IngredientDetailsPage.module.css';
 
@@ -12,7 +13,7 @@ function IngredientDetailsPage() {
   const { id } = useParams<IUseParams>();
   const { isLoading, errorMessage, ingredientsData } = useAppSelector(state => state.feedIngredients);
 
-  const ingredientDetails: any = ingredientsData.find(ingr => ingr._id === id)
+  const ingredientDetails: IIngredient | undefined = ingredientsData.find(ingr => ingr._id === id)
 
   if (!isLoading && !errorMessage && ingredientDetails) {
     return (

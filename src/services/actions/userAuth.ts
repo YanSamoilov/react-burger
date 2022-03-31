@@ -1,7 +1,13 @@
-import { Action, ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-import { RootState } from 'services/types/hooks';
-import { postRegisterUser, postAuthUser, postLogOut, patchNewUserData, getNewAccessToken, getPermissionChangePassword, postNewPassword, getUserData } from 'utils/api';
+import {
+  postRegisterUser,
+  postAuthUser,
+  postLogOut,
+  patchNewUserData,
+  getNewAccessToken,
+  getPermissionChangePassword,
+  postNewPassword,
+  getUserData
+} from 'utils/api';
 import { setTokenInCookie, getCookie, deleteCookie } from 'utils/cookie';
 import {
   GET_SERVER_REQUEST,
@@ -33,7 +39,8 @@ import {
   IPostEmailForgotPageFailed,
   IPostNewPasswordSuccess,
   IPostNewPasswordFailed,
-  IServerRequestReset
+  IServerRequestReset,
+  AppThunk
 } from 'services/types/data';
 
 export type TUserData =
@@ -51,10 +58,6 @@ export type TUserData =
   | IPostNewPasswordSuccess
   | IPostNewPasswordFailed
   | IServerRequestReset
-
-export type AppThunk<TReturn = void> = ActionCreator<
-  ThunkAction<TReturn, Action, RootState, TUserData>
->;
 
 export const getServerRequest = (): IServerRequest => ({
   type: GET_SERVER_REQUEST
